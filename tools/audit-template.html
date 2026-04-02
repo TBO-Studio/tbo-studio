@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Digital — TBO Studio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #6C63FF;
+      --secondary: #FF6584;
+      --dark: #0F0F1A;
+      --card: #1A1A2E;
+      --gray: #9ca3af;
+      --red: #ef4444;
+      --orange: #f59e0b;
+      --green: #22c55e;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: white;
+      color: #1a1a2e;
+      line-height: 1.6;
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      body { font-size: 11pt; }
+      .page-break { page-break-before: always; }
+      .no-print { display: none !important; }
+      .cover { min-height: 100vh; }
+      @page { margin: 1.5cm; }
+    }
+
+    /* ===== COVER PAGE ===== */
+    .cover {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--dark) 0%, #1a1a3e 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 500px; height: 500px;
+      background: var(--primary);
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.2;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: -150px; left: -100px;
+      width: 400px; height: 400px;
+      background: var(--secondary);
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.15;
+    }
+    .cover-content { position: relative; z-index: 1; }
+    .cover .logo {
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 60px;
+    }
+    .cover .logo span { color: var(--primary); }
+    .cover h1 {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .cover .gradient {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cover .meta {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      color: #9ca3af;
+      font-size: 16px;
+    }
+    .cover .meta strong { color: white; }
+    .cover .confidential {
+      margin-top: 60px;
+      padding: 12px 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #6b7280;
+      display: inline-block;
+    }
+
+    /* ===== CONTENT PAGES ===== */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--dark);
+    }
+    h2 .number {
+      color: var(--primary);
+      margin-right: 8px;
+    }
+    .section-line {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+      margin-bottom: 30px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 30px;
+      margin-bottom: 12px;
+      color: var(--dark);
+    }
+
+    p, li {
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ===== SCORE GLOBAL ===== */
+    .score-overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 30px 0;
+    }
+    .score-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .score-card .score {
+      font-size: 42px;
+      font-weight: 900;
+    }
+    .score-card .label {
+      font-size: 13px;
+      color: var(--gray);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .score-card .bar {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .score-card .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+    }
+    .score-red { color: var(--red); }
+    .score-orange { color: var(--orange); }
+    .score-green { color: var(--green); }
+    .bar-red { background: var(--red); }
+    .bar-orange { background: var(--orange); }
+    .bar-green { background: var(--green); }
+
+    /* ===== ISSUE LIST ===== */
+    .issue {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      margin: 12px 0;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: white;
+    }
+    .issue-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .issue-critical .issue-icon { background: rgba(239,68,68,0.1); }
+    .issue-warning .issue-icon { background: rgba(245,158,11,0.1); }
+    .issue-info .issue-icon { background: rgba(34,197,94,0.1); }
+    .issue-content { flex: 1; }
+    .issue-title {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .issue-desc {
+      font-size: 14px;
+      color: var(--gray);
+      margin: 0;
+    }
+    .issue-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-critical { background: rgba(239,68,68,0.1); color: var(--red); }
+    .tag-warning { background: rgba(245,158,11,0.1); color: var(--orange); }
+    .tag-ok { background: rgba(34,197,94,0.1); color: var(--green); }
+
+    /* ===== EDITABLE FIELDS ===== */
+    .editable {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 8px 14px;
+      min-height: 24px;
+      color: var(--primary);
+      font-weight: 600;
+      display: inline-block;
+      min-width: 200px;
+      cursor: text;
+    }
+    .editable:empty::before {
+      content: attr(data-placeholder);
+      color: #d1d5db;
+      font-weight: 400;
+    }
+    .editable:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(108,99,255,0.03);
+    }
+
+    /* ===== RECOMMENDATION TABLE ===== */
+    .reco-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 20px 0;
+    }
+    .reco-table th {
+      background: var(--dark);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 14px 16px;
+      text-align: left;
+    }
+    .reco-table th:first-child { border-radius: 12px 0 0 0; }
+    .reco-table th:last-child { border-radius: 0 12px 0 0; }
+    .reco-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid #f3f4f6;
+      color: #4b5563;
+    }
+    .reco-table tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+    .reco-table tr:last-child td:last-child { border-radius: 0 0 12px 0; }
+    .reco-table tr:hover td { background: #f8fafc; }
+    .priority-high { color: var(--red); font-weight: 700; }
+    .priority-medium { color: var(--orange); font-weight: 700; }
+    .priority-low { color: var(--green); font-weight: 700; }
+
+    /* ===== CTA ===== */
+    .cta-box {
+      background: linear-gradient(135deg, var(--dark) 0%, #1a1a3e 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 50px;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .cta-box h2 { color: white; margin-bottom: 12px; }
+    .cta-box p { color: #9ca3af; margin-bottom: 30px; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    /* ===== EDIT TOOLBAR ===== */
+    .toolbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--dark);
+      color: white;
+      padding: 12px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 100;
+      font-size: 14px;
+    }
+    .toolbar button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    .toolbar button:hover { opacity: 0.9; }
+    .toolbar .hint { color: #6b7280; font-size: 13px; }
+
+    @media print {
+      .toolbar { display: none; }
+      .editable { border: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOOLBAR (hidden on print) -->
+  <div class="toolbar no-print">
+    <div>
+      <strong>TBO Studio</strong> — Audit Template
+      <span class="hint" style="margin-left: 16px;">Clique sur les zones en pointillés pour les remplir</span>
+    </div>
+    <button onclick="window.print()">Exporter en PDF</button>
+  </div>
+
+  <!-- ========================= -->
+  <!-- COVER PAGE -->
+  <!-- ========================= -->
+  <div class="cover">
+    <div class="cover-content">
+      <div class="logo"><span>TBO</span> Studio</div>
+      <h1>Audit Digital<br /><span class="gradient">Gratuit</span></h1>
+      <div class="meta">
+        <div>Entreprise : <strong><span class="editable" contenteditable="true" data-placeholder="Nom de l'entreprise"></span></strong></div>
+        <div>Site web : <strong><span class="editable" contenteditable="true" data-placeholder="www.exemple.fr"></span></strong></div>
+        <div>Date : <strong><span class="editable" contenteditable="true" data-placeholder="28 mars 2026"></span></strong></div>
+        <div>Audit par : <strong>Theo — TBO Studio</strong></div>
+      </div>
+      <div class="confidential">
+        Ce document est confidentiel et destiné uniquement au destinataire mentionné ci-dessus.
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- SCORE GLOBAL -->
+  <!-- ========================= -->
+  <div class="page page-break">
+    <h2><span class="number">01.</span> Score Global</h2>
+    <div class="section-line"></div>
+    <p>Voici une vue d'ensemble de la performance digitale de votre site, analysée sur 4 piliers fondamentaux.</p>
+
+    <div class="score-overview">
+      <div class="score-card">
+        <div class="score score-red"><span class="editable" contenteditable="true" data-placeholder="32">32</span></div>
+        <div class="label">SEO</div>
+        <div class="bar"><div class="bar-fill bar-red" style="width: 32%"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score score-orange"><span class="editable" contenteditable="true" data-placeholder="48">48</span></div>
+        <div class="label">Performance</div>
+        <div class="bar"><div class="bar-fill bar-orange" style="width: 48%"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score score-orange"><span class="editable" contenteditable="true" data-placeholder="55">55</span></div>
+        <div class="label">Design / UX</div>
+        <div class="bar"><div class="bar-fill bar-orange" style="width: 55%"></div></div>
+      </div>
+      <div class="score-card">
+        <div class="score score-red"><span class="editable" contenteditable="true" data-placeholder="20">20</span></div>
+        <div class="label">Conversion</div>
+        <div class="bar"><div class="bar-fill bar-red" style="width: 20%"></div></div>
+      </div>
+    </div>
+
+    <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px; margin-top: 20px;">
+      <p style="color: #991b1b; font-weight: 700; margin-bottom: 4px; font-size: 15px;">Score moyen : <span class="editable" contenteditable="true" data-placeholder="39" style="border-color: #fca5a5;">39</span>/100</p>
+      <p style="color: #b91c1c; font-size: 14px; margin: 0;">Votre site web ne fonctionne actuellement qu'à une fraction de son potentiel. Des actions concretes peuvent rapidement ameliorer ces resultats.</p>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- ANALYSE SEO -->
+  <!-- ========================= -->
+  <div class="page page-break">
+    <h2><span class="number">02.</span> Analyse SEO</h2>
+    <div class="section-line"></div>
+    <p>Le referencement naturel est le pilier de votre visibilite en ligne. Voici les problemes identifies sur votre site.</p>
+
+    <div class="issue issue-critical">
+      <div class="issue-icon">X</div>
+      <div class="issue-content">
+        <div class="issue-title">Balises Title / Meta Description manquantes ou dupliquees</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Decrivez le probleme constate (ex: la page d'accueil n'a pas de meta description, les pages internes ont toutes le meme title...)"></span></p>
+      </div>
+      <span class="issue-tag tag-critical">Critique</span>
+    </div>
+
+    <div class="issue issue-critical">
+      <div class="issue-icon">X</div>
+      <div class="issue-content">
+        <div class="issue-title">Aucune strategie de mots-cles</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Decrivez (ex: aucun mot-cle local cible, le contenu ne cible pas les requetes de recherche pertinentes...)"></span></p>
+      </div>
+      <span class="issue-tag tag-critical">Critique</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Fiche Google Business Profile non optimisee</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Decrivez (ex: description incomplete, pas de posts recents, peu d'avis, categories mal choisies...)"></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Structure de titres (H1, H2, H3) incorrecte</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Decrivez (ex: plusieurs H1 sur une meme page, H2 manquants, structure non hierarchique...)"></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-info">
+      <div class="issue-icon">i</div>
+      <div class="issue-content">
+        <div class="issue-title">Pas de blog / contenu regulier</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Decrivez (ex: aucune page de contenu SEO, pas de blog, pas de FAQ...)"></span></p>
+      </div>
+      <span class="issue-tag tag-ok">Suggestion</span>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- PERFORMANCE -->
+  <!-- ========================= -->
+  <div class="page page-break">
+    <h2><span class="number">03.</span> Performance & Technique</h2>
+    <div class="section-line"></div>
+    <p>La vitesse de chargement impacte directement le referencement Google et l'experience utilisateur.</p>
+
+    <div class="issue issue-critical">
+      <div class="issue-icon">X</div>
+      <div class="issue-content">
+        <div class="issue-title">Temps de chargement trop eleve</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: le site met 6.2s a charger sur mobile (Google recommande moins de 2.5s). Score PageSpeed: 28/100"></span></p>
+      </div>
+      <span class="issue-tag tag-critical">Critique</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Images non optimisees</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: images au format PNG de 3Mo+, pas de format WebP, pas de lazy loading..."></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Site non responsive / problemes mobile</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: texte trop petit sur mobile, boutons difficilement cliquables, menu qui deborde..."></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-info">
+      <div class="issue-icon">i</div>
+      <div class="issue-content">
+        <div class="issue-title">Pas de certificat SSL / HTTPS</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: le site affiche 'Non securise' dans Chrome, penalisant la confiance et le SEO"></span></p>
+      </div>
+      <span class="issue-tag tag-ok">Suggestion</span>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- DESIGN & CONVERSION -->
+  <!-- ========================= -->
+  <div class="page page-break">
+    <h2><span class="number">04.</span> Design & Conversion</h2>
+    <div class="section-line"></div>
+    <p>Un site qui ne convertit pas est un site qui coute de l'argent. Voici les freins identifies.</p>
+
+    <div class="issue issue-critical">
+      <div class="issue-icon">X</div>
+      <div class="issue-content">
+        <div class="issue-title">Aucun appel a l'action (CTA) clair</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: pas de bouton visible pour prendre contact, pas de formulaire, le visiteur ne sait pas quoi faire"></span></p>
+      </div>
+      <span class="issue-tag tag-critical">Critique</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Design date / peu professionnel</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: typographies incohérentes, couleurs datees, mise en page desordonnee..."></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-warning">
+      <div class="issue-icon">!</div>
+      <div class="issue-content">
+        <div class="issue-title">Pas de preuve sociale (avis, temoignages)</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: aucun avis client affiche, pas de logos partenaires, pas de chiffres cles"></span></p>
+      </div>
+      <span class="issue-tag tag-warning">Important</span>
+    </div>
+
+    <div class="issue issue-info">
+      <div class="issue-icon">i</div>
+      <div class="issue-content">
+        <div class="issue-title">Parcours utilisateur non optimise</div>
+        <p class="issue-desc"><span class="editable" contenteditable="true" data-placeholder="Ex: navigation confuse, trop de clics pour acceder aux informations cles, formulaire trop long"></span></p>
+      </div>
+      <span class="issue-tag tag-ok">Suggestion</span>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- PLAN D'ACTION -->
+  <!-- ========================= -->
+  <div class="page page-break">
+    <h2><span class="number">05.</span> Plan d'action recommande</h2>
+    <div class="section-line"></div>
+    <p>Voici les actions prioritaires pour transformer votre site en veritable outil d'acquisition client.</p>
+
+    <table class="reco-table">
+      <thead>
+        <tr>
+          <th>Priorite</th>
+          <th>Action</th>
+          <th>Impact attendu</th>
+          <th>Delai</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="priority-high">Haute</td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Refonte complete du site web">Refonte complete du site web</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Image professionnelle, confiance, conversion">Image professionnelle, confiance, conversion</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="2-3 semaines">2-3 semaines</span></td>
+        </tr>
+        <tr>
+          <td class="priority-high">Haute</td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Strategie SEO locale complete">Strategie SEO locale complete</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Top 3 Google sur vos mots-cles">Top 3 Google sur vos mots-cles</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="1-3 mois">1-3 mois</span></td>
+        </tr>
+        <tr>
+          <td class="priority-medium">Moyenne</td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Optimisation Google Business Profile">Optimisation Google Business Profile</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Visibilite Maps, avis, trafic local">Visibilite Maps, avis, trafic local</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="1 semaine">1 semaine</span></td>
+        </tr>
+        <tr>
+          <td class="priority-medium">Moyenne</td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Mise en place de Google Ads">Mise en place de Google Ads</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Leads immediats, trafic qualifie">Leads immediats, trafic qualifie</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="1 semaine">1 semaine</span></td>
+        </tr>
+        <tr>
+          <td class="priority-low">Basse</td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Automatisation prise de RDV + CRM">Automatisation prise de RDV + CRM</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="Ex: Gain de temps, suivi client">Gain de temps, suivi client</span></td>
+          <td><span class="editable" contenteditable="true" data-placeholder="2 semaines">2 semaines</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================= -->
+  <!-- CTA FINAL -->
+  <!-- ========================= -->
+  <div class="page">
+    <div class="cta-box">
+      <h2>Transformons ces problemes en opportunites</h2>
+      <p>Chaque jour sans action, vos concurrents prennent de l'avance.<br />Discutons de votre projet — sans engagement.</p>
+      <a href="mailto:contact@tbostudio.fr" class="cta-btn">Planifier un appel gratuit</a>
+      <div style="margin-top: 30px; color: #6b7280; font-size: 14px;">
+        <p style="color: #6b7280;">contact@tbostudio.fr</p>
+        <p style="color: #6b7280; margin-top: 4px;">tbostudio.fr</p>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #d1d5db; font-size: 12px;">
+      <p style="color: #d1d5db;">&copy; 2026 TBO Studio — Tous droits reserves</p>
+    </div>
+  </div>
+
+</body>
+</html>

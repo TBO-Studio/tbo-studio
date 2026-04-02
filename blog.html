@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Blog TBO Studio — Conseils, astuces et guides sur le web, le SEO, le SEA et le digital pour les entrepreneurs et PME." />
+  <meta name="keywords" content="blog, SEO, SEA, création site web, marketing digital, automatisation, IA, TBO Studio" />
+  <meta property="og:title" content="Blog — TBO Studio" />
+  <meta property="og:description" content="Conseils et guides pour booster votre présence digitale." />
+  <meta property="og:type" content="website" />
+  <title>Blog — TBO Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6C63FF',
+            secondary: '#FF6584',
+            dark: '#0F0F1A',
+            card: '#1A1A2E',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark text-white font-sans">
+
+  <!-- NAV -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <nav class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
+      <a href="index.html" class="text-2xl font-black tracking-tight">
+        <span class="text-primary">TBO</span> Studio
+      </a>
+      <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+        <li><a href="index.html#services" class="hover:text-white transition">Services</a></li>
+        <li><a href="index.html#about" class="hover:text-white transition">À propos</a></li>
+        <li><a href="index.html#portfolio" class="hover:text-white transition">Portfolio</a></li>
+        <li><a href="blog.html" class="text-white transition">Blog</a></li>
+        <li>
+          <a href="index.html#contact" class="bg-primary text-white px-5 py-2.5 rounded-full hover:bg-opacity-90 transition font-semibold">
+            Me contacter
+          </a>
+        </li>
+      </ul>
+      <button id="menu-btn" class="md:hidden text-gray-300 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-card px-6 pb-6">
+      <ul class="flex flex-col gap-4 text-sm font-medium text-gray-300">
+        <li><a href="index.html#services" class="hover:text-white transition">Services</a></li>
+        <li><a href="index.html#about" class="hover:text-white transition">À propos</a></li>
+        <li><a href="index.html#portfolio" class="hover:text-white transition">Portfolio</a></li>
+        <li><a href="blog.html" class="text-white font-semibold">Blog</a></li>
+        <li><a href="index.html#contact" class="text-primary font-semibold">Me contacter</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- BLOG HERO -->
+  <section class="pt-32 pb-16 relative overflow-hidden">
+    <div class="absolute inset-0 hero-bg"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="text-center">
+        <span class="inline-block bg-primary bg-opacity-20 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-6 animate-fade-in">
+          ✦ Blog & Ressources
+        </span>
+        <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6 animate-slide-up">
+          Guides & conseils<br />
+          <span class="gradient-text">pour votre business</span>
+        </h1>
+        <p class="text-lg text-gray-400 max-w-2xl mx-auto animate-slide-up delay-1">
+          Astuces SEO, stratégies web, automatisation et IA — tout ce qu'il faut pour développer votre présence en ligne.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTRES CATÉGORIES -->
+  <section class="pb-8">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-wrap gap-3 justify-center reveal" id="blog-filters">
+        <button class="blog-filter active" data-filter="all">Tous</button>
+        <button class="blog-filter" data-filter="strategie">Stratégie</button>
+        <button class="blog-filter" data-filter="seo">SEO</button>
+        <button class="blog-filter" data-filter="sea">SEA</button>
+        <button class="blog-filter" data-filter="web">Web</button>
+        <button class="blog-filter" data-filter="branding">Branding</button>
+        <button class="blog-filter" data-filter="franchise">Franchise</button>
+        <button class="blog-filter" data-filter="ia">IA</button>
+        <button class="blog-filter" data-filter="automatisation">Automatisation</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTICLES -->
+  <section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="blog-grid">
+
+        <!-- ARTICLE PLACEHOLDER — à remplacer par de vrais articles -->
+        <p id="blog-empty" class="text-gray-500 text-center col-span-full py-20 text-lg">
+          Les articles arrivent bientôt... Revenez vite !
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA NEWSLETTER -->
+  <section class="py-20">
+    <div class="max-w-3xl mx-auto px-6 reveal">
+      <div class="bg-card border border-gray-800 rounded-3xl p-10 text-center relative overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-48 h-48 bg-primary rounded-full opacity-10 blur-3xl"></div>
+        <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-secondary rounded-full opacity-10 blur-3xl"></div>
+        <div class="relative z-10">
+          <h2 class="text-2xl md:text-3xl font-black mb-4">Restez informé</h2>
+          <p class="text-gray-400 mb-8">Recevez les derniers articles et conseils directement dans votre boîte mail.</p>
+          <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" id="newsletter-form">
+            <input type="email" placeholder="votre@email.fr" required
+              class="flex-1 bg-dark border border-gray-700 rounded-full px-5 py-3 text-sm text-white outline-none focus:border-primary transition" />
+            <button type="submit" class="btn-primary whitespace-nowrap">
+              S'abonner
+              <svg class="w-4 h-4 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-800 py-10">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <a href="index.html" class="text-2xl font-black"><span class="text-primary">TBO</span> Studio</a>
+      <p class="text-gray-600 text-sm">© 2024 TBO Studio. Tous droits réservés.</p>
+      <div class="flex gap-6 text-sm text-gray-500">
+        <a href="index.html#services" class="hover:text-white transition">Services</a>
+        <a href="index.html#portfolio" class="hover:text-white transition">Portfolio</a>
+        <a href="blog.html" class="hover:text-white transition">Blog</a>
+        <a href="index.html#contact" class="hover:text-white transition">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/blog.js"></script>
+</body>
+</html>

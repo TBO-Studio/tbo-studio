@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Templates Emails Prospection — TBO Studio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #6C63FF;
+      --dark: #0F0F1A;
+      --card: #1A1A2E;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a14;
+      color: white;
+      line-height: 1.6;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      padding: 40px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .header .logo { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+    .header .logo span { color: var(--primary); }
+    .header p { color: #6b7280; font-size: 14px; }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* ===== NAV TABS ===== */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 40px;
+      justify-content: center;
+    }
+    .tab {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #9ca3af;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .tab:hover { border-color: rgba(108,99,255,0.4); color: white; }
+    .tab.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* ===== EMAIL CARD ===== */
+    .email-section { display: none; }
+    .email-section.active { display: block; }
+
+    .email-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .email-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .email-title {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .email-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-cold { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    .badge-followup { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .badge-audit { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-closing { background: rgba(239,68,68,0.15); color: #f87171; }
+    .badge-reactivation { background: rgba(168,85,247,0.15); color: #c084fc; }
+
+    .email-meta {
+      padding: 16px 28px;
+      background: rgba(0,0,0,0.2);
+      font-size: 13px;
+      color: #6b7280;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .email-meta strong { color: #9ca3af; }
+
+    .email-body {
+      padding: 28px;
+      font-size: 14.5px;
+      line-height: 1.8;
+      color: #d1d5db;
+      white-space: pre-wrap;
+    }
+    .email-body .variable {
+      color: var(--primary);
+      font-weight: 700;
+      background: rgba(108,99,255,0.1);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .email-footer {
+      padding: 16px 28px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .copy-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { opacity: 0.85; }
+    .copy-btn.copied { background: #22c55e; }
+    .email-tip {
+      font-size: 12px;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    /* ===== TIPS BOX ===== */
+    .tips-box {
+      background: rgba(108,99,255,0.05);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 16px;
+      padding: 28px;
+      margin-top: 20px;
+      margin-bottom: 40px;
+    }
+    .tips-box h3 {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    .tips-box ul {
+      list-style: none;
+      padding: 0;
+    }
+    .tips-box li {
+      padding: 6px 0;
+      font-size: 14px;
+      color: #9ca3af;
+    }
+    .tips-box li::before {
+      content: ">";
+      color: var(--primary);
+      font-weight: 700;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo"><span>TBO</span> Studio</div>
+    <p>Templates d'emails de prospection — Copie, personnalise et envoie</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-target="cold">Premier contact</button>
+      <button class="tab" data-target="audit">Envoi d'audit</button>
+      <button class="tab" data-target="followup">Relance</button>
+      <button class="tab" data-target="closing">Closing</button>
+      <button class="tab" data-target="reactivation">Reactivation</button>
+    </div>
+
+    <!-- ========================= -->
+    <!-- PREMIER CONTACT -->
+    <!-- ========================= -->
+    <div class="email-section active" id="cold">
+
+      <div class="tips-box">
+        <h3>Conseils — Premier contact</h3>
+        <ul>
+          <li>Personnalise TOUJOURS la premiere ligne (montre que tu as regarde leur site)</li>
+          <li>Ne parle jamais de toi dans le premier email — parle de LEUR probleme</li>
+          <li>L'objet doit etre court et creer de la curiosite (pas de "offre" ou "promo")</li>
+          <li>Un seul CTA clair : repondre ou prendre un appel</li>
+        </ul>
+      </div>
+
+      <!-- Email 1 -->
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Le constat direct</div>
+          <span class="email-badge badge-cold">Premier contact</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Une question rapide sur <span class="variable">[nom entreprise]</span></div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je suis tombe sur le site de <span class="variable">[nom entreprise]</span> en cherchant <span class="variable">[mot-cle local, ex: "plombier Marseille"]</span> sur Google.
+
+J'ai remarque quelques points qui pourraient expliquer pourquoi vous n'apparaissez pas dans les premiers resultats :
+- <span class="variable">[Probleme 1 : ex: votre site n'a pas de balises SEO optimisees]</span>
+- <span class="variable">[Probleme 2 : ex: votre fiche Google Business n'est pas complete]</span>
+- <span class="variable">[Probleme 3 : ex: le site met plus de 5 secondes a charger sur mobile]</span>
+
+Ce sont des points qui se corrigent assez rapidement et qui peuvent faire une vraie difference sur votre visibilite locale.
+
+Est-ce que ca vous interesserait d'en discuter 15 minutes ? Aucun engagement, juste un echange pour voir si je peux vous aider.
+
+Bonne journee,
+Theo — TBO Studio
+contact@tbostudio.fr</div>
+        <div class="email-footer">
+          <span class="email-tip">Ideal pour : entreprises locales avec un site mal reference</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <!-- Email 2 -->
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">L'approche "concurrent"</div>
+          <span class="email-badge badge-cold">Premier contact</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> <span class="variable">[Concurrent]</span> vous devance sur Google — voici pourquoi</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+En analysant le secteur <span class="variable">[secteur + ville]</span>, j'ai compare votre site avec celui de <span class="variable">[nom concurrent]</span>.
+
+Aujourd'hui, ils apparaissent en position <span class="variable">[X]</span> sur Google pour <span class="variable">[mot-cle]</span>, alors que <span class="variable">[nom entreprise]</span> n'est pas visible sur la premiere page.
+
+La difference ne vient pas de la qualite de votre travail — elle vient de la structure digitale. Leur site est mieux optimise pour Google, et ca se traduit directement par plus de clients en ligne.
+
+J'ai identifie 3-4 actions concretes qui pourraient vous permettre de les rattraper (voire les depasser) en quelques mois.
+
+Si ca vous interesse, je peux vous envoyer une analyse gratuite de votre site. Ca prend 15 minutes et c'est sans engagement.
+
+A bientot,
+Theo — TBO Studio
+contact@tbostudio.fr</div>
+        <div class="email-footer">
+          <span class="email-tip">Ideal pour : marches concurrentiels, entreprises qui perdent des parts</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <!-- Email 3 -->
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">L'approche "pas de site"</div>
+          <span class="email-badge badge-cold">Premier contact</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> <span class="variable">[Nom entreprise]</span> — vous etes invisible pour 90% de vos clients potentiels</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+J'ai decouvert <span class="variable">[nom entreprise]</span> via <span class="variable">[ou : bouche a oreille, Google Maps, Instagram...]</span> et je me suis rendu compte que vous n'avez pas de site web (ou que votre site actuel ne reflete pas la qualite de ce que vous faites).
+
+En 2026, <span class="variable">[X]</span>% des clients cherchent sur Google avant de choisir un <span class="variable">[metier]</span>. Sans site optimise, ces clients-la vont chez vos concurrents.
+
+Je cree des sites web modernes, rapides et optimises pour Google — specifiquement pour les <span class="variable">[metier/secteur]</span>.
+
+Voici ce que ca inclut :
+- Un site professionnel qui reflete votre image
+- Un referencement local pour apparaitre dans les premiers resultats
+- Un systeme pour que les clients vous contactent facilement
+
+Est-ce qu'on pourrait en parler 15 minutes cette semaine ?
+
+Theo — TBO Studio
+contact@tbostudio.fr</div>
+        <div class="email-footer">
+          <span class="email-tip">Ideal pour : commerces / artisans sans presence web</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- ENVOI D'AUDIT -->
+    <!-- ========================= -->
+    <div class="email-section" id="audit">
+
+      <div class="tips-box">
+        <h3>Conseils — Envoi d'audit</h3>
+        <ul>
+          <li>L'audit doit etre envoye dans les 24h apres le premier contact ou la demande</li>
+          <li>Mets en avant les problemes les plus impactants en premier</li>
+          <li>Termine toujours par un CTA vers un appel, pas vers un achat</li>
+          <li>Joins l'audit en PDF (utilise le template audit-template.html)</li>
+        </ul>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Envoi d'audit spontane</div>
+          <span class="email-badge badge-audit">Audit</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> J'ai analyse votre site — voici ce que j'ai trouve</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Comme evoque, j'ai pris le temps d'analyser le site de <span class="variable">[nom entreprise]</span> en detail.
+
+Vous trouverez en piece jointe un audit complet avec :
+- Votre score global sur 4 piliers (SEO, performance, design, conversion)
+- Les problemes critiques identifies
+- Un plan d'action concret avec les priorites
+
+Les points les plus importants :
+
+1. <span class="variable">[Probleme principal + impact : ex: "Votre site n'apparait pas sur Google pour vos mots-cles locaux — vous perdez probablement X clients/mois"]</span>
+
+2. <span class="variable">[Deuxieme probleme : ex: "Le site met 6s a charger sur mobile — 53% des visiteurs quittent un site qui met plus de 3s"]</span>
+
+3. <span class="variable">[Troisieme probleme : ex: "Aucun appel a l'action clair — un visiteur qui ne sait pas quoi faire part chez le concurrent"]</span>
+
+La bonne nouvelle : ces problemes se corrigent, et les resultats peuvent etre rapides.
+
+Seriez-vous disponible pour un appel de 15 minutes cette semaine ? Je vous expliquerai les actions a mettre en place en priorite.
+
+Theo — TBO Studio
+contact@tbostudio.fr
+
+P.S. : L'audit est totalement gratuit et sans engagement. Mon objectif est simplement de vous montrer le potentiel inexploite.</div>
+        <div class="email-footer">
+          <span class="email-tip">Joindre l'audit PDF en piece jointe</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Audit apres visite du site prospect</div>
+          <span class="email-badge badge-audit">Audit</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> 3 choses qui freinent <span class="variable">[nom entreprise]</span> sur Google</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je travaille dans le digital pour les entreprises locales et en analysant le marche <span class="variable">[secteur + ville]</span>, votre site a attire mon attention.
+
+J'ai identifie 3 points qui freinent votre visibilite :
+
+<span class="variable">[Point 1 avec detail]</span>
+<span class="variable">[Point 2 avec detail]</span>
+<span class="variable">[Point 3 avec detail]</span>
+
+J'ai prepare un mini-audit gratuit (en piece jointe) pour que vous puissiez voir ca en detail.
+
+Si vous souhaitez en discuter, je suis disponible pour un appel rapide cette semaine.
+
+Theo — TBO Studio
+contact@tbostudio.fr</div>
+        <div class="email-footer">
+          <span class="email-tip">Plus court et direct — bon pour les prospects froids</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- RELANCES -->
+    <!-- ========================= -->
+    <div class="email-section" id="followup">
+
+      <div class="tips-box">
+        <h3>Conseils — Relances</h3>
+        <ul>
+          <li>Relance 1 : 3-4 jours apres le premier email</li>
+          <li>Relance 2 : 7 jours apres la relance 1</li>
+          <li>Relance 3 (derniere) : 10-14 jours apres — plus court, plus direct</li>
+          <li>Ne relance JAMAIS plus de 3 fois — au-dela tu deviens spam</li>
+        </ul>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Relance 1 — Valeur ajoutee</div>
+          <span class="email-badge badge-followup">Relance</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Re: <span class="variable">[objet du premier email]</span></div>
+          <div><strong>Timing :</strong> 3-4 jours apres le premier email</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je me permets de revenir vers vous suite a mon email de <span class="variable">[jour]</span>.
+
+J'ai entre-temps approfondi mon analyse et j'ai decouvert un point interessant : <span class="variable">[nouveau fait concret, ex: "votre concurrent direct [nom] a gagne 3 positions sur Google le mois dernier sur le mot-cle [X]"]</span>.
+
+Ca peut paraitre anodin, mais en termes de clients potentiels captes, ca represente <span class="variable">[estimation]</span>.
+
+15 minutes d'echange pourraient vous faire gagner des mois. Qu'en dites-vous ?
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">Apporte une nouvelle info, ne repete pas le premier email</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Relance 2 — Cas concret</div>
+          <span class="email-badge badge-followup">Relance</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Un cas qui pourrait vous parler</div>
+          <div><strong>Timing :</strong> 7 jours apres la relance 1</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je voulais partager un exemple rapide.
+
+J'ai recemment accompagne <span class="variable">[type d'entreprise similaire, ex: "un cabinet dentaire a Lyon"]</span> qui avait exactement les memes problematiques que celles que j'ai identifiees sur votre site.
+
+En <span class="variable">[duree]</span>, on a :
+- <span class="variable">[Resultat 1 : ex: "Passe de la page 3 a la position 2 sur Google"]</span>
+- <span class="variable">[Resultat 2 : ex: "Triple le nombre de demandes de contact"]</span>
+- <span class="variable">[Resultat 3 : ex: "Reduit le cout d'acquisition client de 40%"]</span>
+
+Je pense sincerement qu'on pourrait obtenir des resultats similaires pour <span class="variable">[nom entreprise]</span>.
+
+Seriez-vous ouvert a un echange rapide ?
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">La preuve sociale convertit — utilise un vrai cas si possible</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Relance 3 — Derniere (breakup email)</div>
+          <span class="email-badge badge-followup">Relance</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Je ne vous embete plus</div>
+          <div><strong>Timing :</strong> 10-14 jours apres la relance 2</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je comprends que le timing n'est peut-etre pas le bon, et je ne veux pas etre insistant.
+
+Je vous laisse mon contact au cas ou le sujet deviendrait une priorite : contact@tbostudio.fr
+
+D'ici la, je vous souhaite beaucoup de succes avec <span class="variable">[nom entreprise]</span>.
+
+Theo — TBO Studio
+
+P.S. : Si ce n'est pas le bon moment, n'hesitez pas a me le dire — un simple "pas maintenant" me suffit.</div>
+        <div class="email-footer">
+          <span class="email-tip">Paradoxalement, le breakup email a souvent le meilleur taux de reponse</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- CLOSING -->
+    <!-- ========================= -->
+    <div class="email-section" id="closing">
+
+      <div class="tips-box">
+        <h3>Conseils — Closing</h3>
+        <ul>
+          <li>Apres un appel ou un echange positif — battre le fer tant qu'il est chaud</li>
+          <li>Recapitule ce qui a ete dit pour montrer que tu as ecoute</li>
+          <li>Propose un next step clair et simple</li>
+          <li>Cree un leger sentiment d'urgence (sans etre pushy)</li>
+        </ul>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Apres un appel decouverte</div>
+          <span class="email-badge badge-closing">Closing</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Suite a notre echange — recapitulatif + prochaines etapes</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Merci pour cet echange, c'etait tres interessant de comprendre les enjeux de <span class="variable">[nom entreprise]</span>.
+
+Pour recapituler ce qu'on a identifie ensemble :
+- <span class="variable">[Probleme/besoin 1 evoque pendant l'appel]</span>
+- <span class="variable">[Probleme/besoin 2]</span>
+- <span class="variable">[Objectif exprime par le prospect]</span>
+
+Ce que je vous propose :
+<span class="variable">[Description claire de l'offre / du service, ex: "Une refonte complete de votre site + une strategie SEO locale sur 3 mois"]</span>
+
+Investissement : <span class="variable">[prix]</span>
+Delai de livraison : <span class="variable">[delai]</span>
+
+Si vous etes partant, on peut demarrer des <span class="variable">[date]</span>. Je n'ai que <span class="variable">[X]</span> places ce mois-ci pour garder un accompagnement de qualite.
+
+N'hesitez pas si vous avez des questions.
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">Envoyer dans les 2h apres l'appel</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Relance post-devis (pas de reponse)</div>
+          <span class="email-badge badge-closing">Closing</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Des questions sur ma proposition ?</div>
+          <div><strong>Timing :</strong> 3-5 jours apres l'envoi du devis</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je reviens vers vous concernant la proposition que je vous ai envoyee <span class="variable">[jour]</span>.
+
+Avez-vous eu le temps de la parcourir ? Si vous avez des questions ou si certains points meritent d'etre ajustes, je suis totalement ouvert a en discuter.
+
+Mon objectif est de trouver la solution qui correspond exactement a vos besoins et votre budget.
+
+Un rapide appel de 10 minutes ?
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">Reste ouvert et flexible — ne sois pas pushy</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- REACTIVATION -->
+    <!-- ========================= -->
+    <div class="email-section" id="reactivation">
+
+      <div class="tips-box">
+        <h3>Conseils — Reactivation</h3>
+        <ul>
+          <li>Pour les prospects qui ont dit "pas maintenant" il y a 1-3 mois</li>
+          <li>Apporte une nouvelle raison de te recontacter (nouveau service, changement marche...)</li>
+          <li>Sois bref — ils se souviennent peut-etre a peine de toi</li>
+        </ul>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Reactivation avec nouvelle info</div>
+          <span class="email-badge badge-reactivation">Reactivation</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Du nouveau pour <span class="variable">[nom entreprise]</span></div>
+          <div><strong>Timing :</strong> 1-3 mois apres le dernier contact</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+On avait echange il y a quelques mois au sujet de la visibilite digitale de <span class="variable">[nom entreprise]</span>.
+
+Depuis, j'ai remarque que <span class="variable">[nouvelle info : ex: "Google a mis a jour son algorithme et les sites non optimises pour mobile ont perdu en moyenne 15% de visibilite" / "un nouveau concurrent est apparu en premiere page sur votre mot-cle"]</span>.
+
+Je me suis dit que ca pourrait vous interesser.
+
+Si le sujet est redevenu une priorite, je suis disponible pour un point rapide.
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">Donne une vraie raison de revenir — pas juste "je prends des nouvelles"</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+      <div class="email-card">
+        <div class="email-header">
+          <div class="email-title">Reactivation "etude de cas"</div>
+          <span class="email-badge badge-reactivation">Reactivation</span>
+        </div>
+        <div class="email-meta">
+          <div><strong>Objet :</strong> Ca m'a fait penser a vous</div>
+        </div>
+        <div class="email-body">Bonjour <span class="variable">[Prenom]</span>,
+
+Je viens de terminer un projet pour <span class="variable">[type entreprise similaire]</span> et les resultats m'ont fait penser a notre echange :
+
+- <span class="variable">[Resultat 1]</span>
+- <span class="variable">[Resultat 2]</span>
+- <span class="variable">[Resultat 3]</span>
+
+Je suis convaincu qu'on pourrait atteindre des resultats similaires pour <span class="variable">[nom entreprise]</span>.
+
+Si le timing est meilleur maintenant, je serais ravi d'en rediscuter.
+
+Theo — TBO Studio</div>
+        <div class="email-footer">
+          <span class="email-tip">La preuve par l'exemple est plus convaincante que n'importe quel argument</span>
+          <button class="copy-btn" onclick="copyEmail(this)">Copier l'email</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.email-section').forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.target).classList.add('active');
+      });
+    });
+
+    // Copy email
+    function copyEmail(btn) {
+      const body = btn.closest('.email-card').querySelector('.email-body');
+      const subject = btn.closest('.email-card').querySelector('.email-meta');
+
+      let text = '';
+      if (subject) {
+        text += subject.textContent.trim() + '\n\n---\n\n';
+      }
+      text += body.textContent.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copie !';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copier l\'email';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>

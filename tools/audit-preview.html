@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Digital — TBO Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        dark: { 900: '#0f0b1a', 800: '#1a1428', 700: '#251e36' },
+                        accent: { pink: '#e84393', purple: '#6c5ce7', blue: '#0984e3' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-cover {
+            background: linear-gradient(180deg, #1a1035 0%, #0f0b1a 50%, #1a1035 100%);
+        }
+        .gradient-cover::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(135deg, rgba(108,92,231,0.15) 0%, rgba(232,67,147,0.1) 100%);
+        }
+        .score-card { transition: transform 0.2s; }
+        .score-card:hover { transform: translateY(-2px); }
+        .severity-critique { background: #fff5f5; border-left: 3px solid #e53e3e; }
+        .severity-important { background: #fffaf0; border-left: 3px solid #ed8936; }
+        .severity-suggestion { background: #f0fff4; border-left: 3px solid #48bb78; }
+        .badge-critique { background: #fed7d7; color: #c53030; }
+        .badge-important { background: #feebc8; color: #c05621; }
+        .badge-suggestion { background: #c6f6d5; color: #276749; }
+        .icon-critique { background: #fed7d7; color: #e53e3e; }
+        .icon-important { background: #feebc8; color: #ed8936; }
+        .icon-suggestion { background: #c6f6d5; color: #48bb78; }
+        .section-bar { width: 40px; height: 4px; background: #e53e3e; border-radius: 2px; }
+        @media print {
+            .page-break { page-break-before: always; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- PAGE 1: Cover -->
+    <section class="gradient-cover relative min-h-screen flex flex-col justify-center px-12 md:px-20 overflow-hidden">
+        <div class="relative z-10">
+            <p class="text-white/80 font-semibold text-lg tracking-wide mb-10">
+                <span class="text-accent-pink">TBO</span> Studio
+            </p>
+            <h1 class="text-white text-5xl md:text-7xl font-black leading-tight mb-2">Audit Digital</h1>
+            <h2 class="text-accent-purple text-4xl md:text-5xl font-black mb-12">Gratuit</h2>
+
+            <div class="text-white/60 text-sm space-y-1.5 mb-16">
+                <p>Entreprise : <span class="text-white/90 font-medium">Nom de l'entreprise</span></p>
+                <p>Site web : <span class="text-white/90 font-medium">www.exemple.fr</span></p>
+                <p>Date : <span class="text-white/90 font-medium">28 mars 2026</span></p>
+                <p>Audit par : <span class="text-white/90 font-medium">Theo — TBO Studio</span></p>
+            </div>
+
+            <div class="inline-block border border-white/10 rounded-lg px-5 py-3">
+                <p class="text-white/40 text-xs">Ce document est confidentiel et destiné uniquement au destinataire mentionné ci-dessus.</p>
+            </div>
+        </div>
+
+        <!-- Ambient glow -->
+        <div class="absolute top-1/4 right-0 w-96 h-96 bg-accent-purple/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/4 w-80 h-80 bg-accent-pink/5 rounded-full blur-3xl"></div>
+    </section>
+
+    <!-- PAGE 2: Score Global -->
+    <section class="min-h-screen bg-white px-12 md:px-20 py-16 page-break">
+        <div class="max-w-4xl">
+            <p class="text-gray-400 font-semibold text-sm mb-1">01.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-1">Score Global</h2>
+            <div class="section-bar mb-6"></div>
+            <p class="text-gray-500 mb-10">Voici une vue d'ensemble de la performance digitale de votre site, analysée sur 4 piliers fondamentaux.</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <!-- SEO -->
+                <div class="score-card bg-white border border-gray-100 rounded-2xl p-6 text-center shadow-sm">
+                    <p class="text-5xl font-black text-gray-800 mb-2">32</p>
+                    <p class="text-sm text-gray-400 font-medium mb-3">SEO</p>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                        <div class="bg-red-500 h-1.5 rounded-full" style="width: 32%"></div>
+                    </div>
+                </div>
+                <!-- Performance -->
+                <div class="score-card bg-white border border-gray-100 rounded-2xl p-6 text-center shadow-sm">
+                    <p class="text-5xl font-black text-gray-800 mb-2">48</p>
+                    <p class="text-sm text-gray-400 font-medium mb-3">Performance</p>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                        <div class="bg-orange-400 h-1.5 rounded-full" style="width: 48%"></div>
+                    </div>
+                </div>
+                <!-- Design/UX -->
+                <div class="score-card bg-white border border-gray-100 rounded-2xl p-6 text-center shadow-sm">
+                    <p class="text-5xl font-black text-gray-800 mb-2">55</p>
+                    <p class="text-sm text-gray-400 font-medium mb-3">Design / UX</p>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                        <div class="bg-yellow-400 h-1.5 rounded-full" style="width: 55%"></div>
+                    </div>
+                </div>
+                <!-- Conversion -->
+                <div class="score-card bg-white border border-gray-100 rounded-2xl p-6 text-center shadow-sm">
+                    <p class="text-5xl font-black text-gray-800 mb-2">22</p>
+                    <p class="text-sm text-gray-400 font-medium mb-3">Conversion</p>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                        <div class="bg-red-500 h-1.5 rounded-full" style="width: 22%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score moyen -->
+            <div class="bg-red-50 border border-red-100 rounded-xl px-6 py-4">
+                <p class="font-bold text-gray-800">Score moyen : <span class="text-red-600">39</span> <span class="text-gray-400 font-normal">/100</span></p>
+                <p class="text-gray-500 text-sm mt-1">Votre site web ne fonctionne actuellement qu'à une fraction de son potentiel. Des actions concrètes peuvent rapidement améliorer ces résultats.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 3: Analyse SEO -->
+    <section class="min-h-screen bg-white px-12 md:px-20 py-16 page-break">
+        <div class="max-w-4xl">
+            <p class="text-gray-400 font-semibold text-sm mb-1">02.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-1">Analyse SEO</h2>
+            <div class="section-bar mb-6"></div>
+            <p class="text-gray-500 mb-10">Le référencement naturel est le pilier de votre visibilité en ligne. Voici les problèmes identifiés sur votre site.</p>
+
+            <div class="space-y-4">
+                <!-- Item CRITIQUE -->
+                <div class="severity-critique rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-critique w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">X</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Balises Title / Meta Description manquantes ou dupliquées</p>
+                            <p class="text-gray-400 text-sm mt-1">Décrivez le problème constaté (ex: la page d'accueil n'a pas de meta description, les pages internes ont toutes le même title...)</p>
+                        </div>
+                    </div>
+                    <span class="badge-critique text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">CRITIQUE</span>
+                </div>
+
+                <!-- Item CRITIQUE -->
+                <div class="severity-critique rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-critique w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">X</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Aucune stratégie de mots-clés</p>
+                            <p class="text-gray-400 text-sm mt-1">Décrivez (ex: aucun mot-clé local ciblé, le contenu ne cible pas les requêtes de recherche pertinentes...)</p>
+                        </div>
+                    </div>
+                    <span class="badge-critique text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">CRITIQUE</span>
+                </div>
+
+                <!-- Item IMPORTANT -->
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Fiche Google Business Profile non optimisée</p>
+                            <p class="text-gray-400 text-sm mt-1">Décrivez (ex: description incomplète, pas de posts récents, peu d'avis, catégories mal choisies...)</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <!-- Item IMPORTANT -->
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Structure de titres (H1, H2, H3) incorrecte</p>
+                            <p class="text-gray-400 text-sm mt-1">Décrivez (ex: plusieurs H1 sur une même page, H2 manquants, structure non hiérarchique...)</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <!-- Item SUGGESTION -->
+                <div class="severity-suggestion rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-suggestion w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">i</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Pas de blog / contenu régulier</p>
+                            <p class="text-gray-400 text-sm mt-1">Décrivez (ex: aucune page de contenu SEO, pas de blog, pas de FAQ...)</p>
+                        </div>
+                    </div>
+                    <span class="badge-suggestion text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">SUGGESTION</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 4: Performance & Technique -->
+    <section class="min-h-screen bg-white px-12 md:px-20 py-16 page-break">
+        <div class="max-w-4xl">
+            <p class="text-gray-400 font-semibold text-sm mb-1">03.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-1">Performance & Technique</h2>
+            <div class="section-bar mb-6"></div>
+            <p class="text-gray-500 mb-10">La vitesse de chargement impacte directement le référencement Google et l'expérience utilisateur.</p>
+
+            <div class="space-y-4">
+                <div class="severity-critique rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-critique w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">X</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Temps de chargement trop élevé</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: le site met 6.2s à charger sur mobile (Google recommande moins de 2.5s). Score PageSpeed: 28/100</p>
+                        </div>
+                    </div>
+                    <span class="badge-critique text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">CRITIQUE</span>
+                </div>
+
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Images non optimisées</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: images au format PNG de 3Mo+, pas de format WebP, pas de lazy loading...</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Site non responsive / problèmes mobile</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: texte trop petit sur mobile, boutons difficilement cliquables, menu qui déborde...</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <div class="severity-suggestion rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-suggestion w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">i</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Pas de certificat SSL / HTTPS</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: le site affiche 'Non sécurisé' dans Chrome, pénalisant la confiance et le SEO</p>
+                        </div>
+                    </div>
+                    <span class="badge-suggestion text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">SUGGESTION</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 5: Design & Conversion -->
+    <section class="min-h-screen bg-white px-12 md:px-20 py-16 page-break">
+        <div class="max-w-4xl">
+            <p class="text-gray-400 font-semibold text-sm mb-1">04.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-1">Design & Conversion</h2>
+            <div class="section-bar mb-6"></div>
+            <p class="text-gray-500 mb-10">Un site qui ne convertit pas est un site qui coûte de l'argent. Voici les freins identifiés.</p>
+
+            <div class="space-y-4">
+                <div class="severity-critique rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-critique w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">X</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Aucun appel à l'action (CTA) clair</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: pas de bouton visible pour prendre contact, pas de formulaire, le visiteur ne sait pas quoi faire</p>
+                        </div>
+                    </div>
+                    <span class="badge-critique text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">CRITIQUE</span>
+                </div>
+
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Design daté / peu professionnel</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: typographies incohérentes, couleurs datées, mise en page désordonnée...</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <div class="severity-important rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-important w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">!</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Pas de preuve sociale (avis, témoignages)</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: aucun avis client affiché, pas de logos partenaires, pas de chiffres clés</p>
+                        </div>
+                    </div>
+                    <span class="badge-important text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">IMPORTANT</span>
+                </div>
+
+                <div class="severity-suggestion rounded-xl px-6 py-5 flex items-start justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="icon-suggestion w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-0.5">i</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Parcours utilisateur non optimisé</p>
+                            <p class="text-gray-400 text-sm mt-1">Ex: navigation confuse, trop de clics pour accéder aux informations clés, formulaire trop long</p>
+                        </div>
+                    </div>
+                    <span class="badge-suggestion text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">SUGGESTION</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAGE 6: Plan d'action -->
+    <section class="bg-white px-12 md:px-20 py-16 page-break">
+        <div class="max-w-4xl">
+            <p class="text-gray-400 font-semibold text-sm mb-1">05.</p>
+            <h2 class="text-3xl font-black text-gray-900 mb-1">Plan d'action recommandé</h2>
+            <div class="section-bar mb-6"></div>
+            <p class="text-gray-500 mb-10">Voici les actions prioritaires pour transformer votre site en véritable outil d'acquisition client.</p>
+
+            <div class="overflow-hidden rounded-xl border border-gray-100">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-800 text-white text-xs uppercase tracking-wider">
+                            <th class="px-6 py-4 text-left font-semibold">Priorité</th>
+                            <th class="px-6 py-4 text-left font-semibold">Action</th>
+                            <th class="px-6 py-4 text-left font-semibold">Impact attendu</th>
+                            <th class="px-6 py-4 text-left font-semibold">Délai</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-gray-50">
+                            <td class="px-6 py-4 font-medium">Haute</td>
+                            <td class="px-6 py-4 text-accent-purple font-medium">Refonte complète du site web</td>
+                            <td class="px-6 py-4 text-gray-500">Image professionnelle, confiance, conversion</td>
+                            <td class="px-6 py-4 text-gray-500">2-3 semaines</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 bg-gray-50/50">
+                            <td class="px-6 py-4 font-medium">Haute</td>
+                            <td class="px-6 py-4 text-accent-purple font-medium">Stratégie SEO locale complète</td>
+                            <td class="px-6 py-4 text-gray-500">Top 3 Google sur vos mots-clés</td>
+                            <td class="px-6 py-4 text-gray-500">1-3 mois</td>
+                        </tr>
+                        <tr class="border-b border-gray-50">
+                            <td class="px-6 py-4 font-medium">Moyenne</td>
+                            <td class="px-6 py-4 text-accent-purple font-medium">Optimisation Google Business Profile</td>
+                            <td class="px-6 py-4 text-gray-500">Visibilité Maps, avis, trafic local</td>
+                            <td class="px-6 py-4 text-gray-500">1 semaine</td>
+                        </tr>
+                        <tr class="border-b border-gray-50 bg-gray-50/50">
+                            <td class="px-6 py-4 font-medium">Moyenne</td>
+                            <td class="px-6 py-4 text-accent-purple font-medium">Mise en place de Google Ads</td>
+                            <td class="px-6 py-4 text-gray-500">Leads immédiats, trafic qualifié</td>
+                            <td class="px-6 py-4 text-gray-500">1 semaine</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium">Basse</td>
+                            <td class="px-6 py-4 text-accent-purple font-medium">Automatisation prise de RDV + CRM</td>
+                            <td class="px-6 py-4 text-gray-500">Gain de temps, suivi client</td>
+                            <td class="px-6 py-4 text-gray-500">2 semaines</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Footer -->
+    <section class="gradient-cover relative px-12 md:px-20 py-20 text-center">
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <h2 class="text-white text-3xl md:text-4xl font-black mb-4">Transformons ces problèmes en opportunités</h2>
+            <p class="text-white/50 mb-2">Chaque jour sans action, vos concurrents prennent de l'avance.</p>
+            <p class="text-white/50 mb-8">Discutons de votre projet — sans engagement.</p>
+
+            <a href="#" class="inline-block bg-accent-purple hover:bg-accent-purple/90 text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105 mb-8">
+                Planifier un appel gratuit
+            </a>
+
+            <div class="text-white/30 text-sm space-y-1">
+                <p>contact@tbostudio.fr</p>
+                <p>tbostudio.fr</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-50 text-center py-6">
+        <p class="text-gray-300 text-xs">&copy; 2026 TBO Studio — Tous droits réservés</p>
+    </footer>
+
+</body>
+</html>
