@@ -625,17 +625,29 @@
       const apiKey = getApiKey();
       const keyParam = apiKey ? `&key=${apiKey}` : '';
       const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&category=PERFORMANCE&category=ACCESSIBILITY&category=SEO&category=BEST_PRACTICES&strategy=mobile${keyParam}`;
-      let res = await fetch(apiUrl);
-      // Retry une fois après 5s si rate limit
-      if (res.status === 429) {
-        await sleep(5000);
-        res = await fetch(apiUrl);
+
+      // 3 tentatives avec délai croissant
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0) await sleep(attempt * 10000); // 10s, 20s
+
+        const res = await fetch(apiUrl);
+        console.log(`PageSpeed attempt ${attempt + 1} — status: ${res.status}`);
+
+        if (res.status === 429) {
+          if (attempt < 2) continue; // retry
+          throw new Error('Trop de requêtes — attendez 1 minute et réessayez.');
+        }
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          console.log('PageSpeed error:', errData);
+          throw new Error(errData.error?.message || "Impossible d'analyser ce site. Vérifiez l'URL.");
+        }
+
+        const data = await res.json();
+        if (!data.lighthouseResult) throw new Error("Google n'a pas pu accéder à ce site. Vérifiez qu'il est en ligne.");
+        return data;
       }
-      if (res.status === 429) throw new Error('Trop de requêtes — attendez 30 secondes et réessayez.');
-      if (!res.ok) throw new Error("Impossible d'analyser ce site. Vérifiez l'URL et réessayez.");
-      const data = await res.json();
-      if (!data.lighthouseResult) throw new Error("Google n'a pas pu accéder à ce site. Vérifiez qu'il est en ligne.");
-      return data;
     }
 
     // ===== PARSE RESULTS =====
