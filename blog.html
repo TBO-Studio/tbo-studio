@@ -3,12 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Blog TBO Studio — Conseils, astuces et guides sur le web, le SEO, le SEA et le digital pour les entrepreneurs et PME." />
+  <meta name="description" content="Blog TBO Studio — Conseils, astuces et guides sur le web, le SEO, le SEA et le digital pour les artisans et commerçants du sud de la France." />
   <meta name="keywords" content="blog, SEO, SEA, création site web, marketing digital, automatisation, IA, TBO Studio" />
+  <link rel="canonical" href="https://tbo-studio.fr/blog.html" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <meta property="og:title" content="Blog — TBO Studio" />
   <meta property="og:description" content="Conseils et guides pour booster votre présence digitale." />
   <meta property="og:type" content="website" />
-  <title>Blog — TBO Studio</title>
+  <meta property="og:url" content="https://tbo-studio.fr/blog.html" />
+  <meta property="og:image" content="https://tbo-studio.fr/assets/img/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blog — TBO Studio" />
+  <meta name="twitter:description" content="Conseils et guides pour booster votre présence digitale." />
+  <meta name="twitter:image" content="https://tbo-studio.fr/assets/img/hero-bg.jpg" />
+  <title>Blog — Conseils Web, SEO & Digital | TBO Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="assets/css/style.css" />
   <script>
@@ -16,79 +24,89 @@
       theme: {
         extend: {
           colors: {
-            primary: '#6C63FF',
-            secondary: '#FF6584',
-            dark: '#0F0F1A',
-            card: '#1A1A2E',
+            primary: '#c9845c',
+            'primary-light': '#d4956b',
+            'primary-dark': '#a8714e',
+            dark: '#161311',
+            card: '#1e1a17',
+            cream: '#e8ddd4',
+            warm: '#c4b5a8',
+            muted: '#8a7e75',
           },
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            display: ['Cormorant Garamond', 'serif'],
+            sans: ['Outfit', 'sans-serif'],
           }
         }
       }
     }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-dark text-white font-sans">
+<body class="bg-dark text-cream font-sans">
 
   <!-- NAV -->
   <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
     <nav class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-      <a href="index.html" class="text-2xl font-black tracking-tight">
-        <span class="text-primary">TBO</span> Studio
+      <a href="index.html" class="font-display text-2xl font-extrabold tracking-tight">
+        <span class="text-primary">TBO</span> <span class="text-cream/70">Studio</span>
       </a>
-      <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
-        <li><a href="index.html#services" class="hover:text-white transition">Services</a></li>
-        <li><a href="index.html#about" class="hover:text-white transition">À propos</a></li>
-        <li><a href="blog.html" class="text-white transition">Blog</a></li>
+      <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
+        <li><a href="index.html#services" class="hover:text-cream transition duration-300">Services</a></li>
+        <li><a href="index.html#about" class="hover:text-cream transition duration-300">À propos</a></li>
+        <li><a href="blog.html" class="text-cream transition duration-300">Blog</a></li>
         <li>
-          <a href="index.html#contact" class="bg-primary text-white px-5 py-2.5 rounded-full hover:bg-opacity-90 transition font-semibold">
-            Me contacter
+          <a href="projet.html" class="bg-primary text-dark px-5 py-2.5 rounded-lg hover:bg-primary-light transition font-semibold text-sm">
+            Démarrer un projet
           </a>
         </li>
       </ul>
-      <button id="menu-btn" class="md:hidden text-gray-300 focus:outline-none">
+      <button id="menu-btn" class="md:hidden text-muted focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </nav>
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-card px-6 pb-6">
-      <ul class="flex flex-col gap-4 text-sm font-medium text-gray-300">
-        <li><a href="index.html#services" class="hover:text-white transition">Services</a></li>
-        <li><a href="index.html#about" class="hover:text-white transition">À propos</a></li>
-        <li><a href="blog.html" class="text-white font-semibold">Blog</a></li>
+    <div id="mobile-menu" class="hidden md:hidden bg-card/95 backdrop-blur-lg px-6 pb-6 border-b border-primary/10">
+      <ul class="flex flex-col gap-4 text-sm font-medium text-muted">
+        <li><a href="index.html#services" class="hover:text-cream transition">Services</a></li>
+        <li><a href="index.html#about" class="hover:text-cream transition">À propos</a></li>
+        <li><a href="blog.html" class="text-cream font-semibold">Blog</a></li>
         <li><a href="index.html#contact" class="text-primary font-semibold">Me contacter</a></li>
       </ul>
     </div>
   </header>
 
+  <main>
+
   <!-- BLOG HERO -->
-  <section class="pt-32 pb-16 relative overflow-hidden">
+  <section class="pt-36 pb-16 relative overflow-hidden">
     <div class="absolute inset-0 hero-bg"></div>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="max-w-6xl mx-auto px-6 relative z-10">
       <div class="text-center">
-        <span class="inline-block bg-primary bg-opacity-20 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-6 animate-fade-in">
-          ✦ Blog & Ressources
+        <span class="inline-block border border-primary/20 text-primary text-sm font-medium px-4 py-1.5 rounded-lg mb-6 animate-fade-in tracking-wide">
+          Blog & Ressources
         </span>
-        <h1 class="text-4xl md:text-6xl font-black leading-tight mb-6 animate-slide-up">
+        <h1 class="font-display text-5xl md:text-6xl font-bold leading-tight mb-6 animate-slide-up tracking-tight italic">
           Guides & conseils<br />
-          <span class="gradient-text">pour votre business</span>
+          <span class="gradient-text not-italic">pour votre business</span>
         </h1>
-        <p class="text-lg text-gray-400 max-w-2xl mx-auto animate-slide-up delay-1">
+        <p class="text-lg text-muted max-w-2xl mx-auto animate-slide-up delay-1 font-light">
           Astuces SEO, stratégies web, automatisation et IA — tout ce qu'il faut pour développer votre présence en ligne.
         </p>
       </div>
     </div>
   </section>
 
+  <hr class="craft-divider" />
+
   <!-- FILTRES CATÉGORIES -->
-  <section class="pb-8">
+  <section class="py-10">
     <div class="max-w-6xl mx-auto px-6">
       <div class="flex flex-wrap gap-3 justify-center reveal" id="blog-filters">
         <button class="blog-filter active" data-filter="all">Tous</button>
@@ -105,12 +123,11 @@
   </section>
 
   <!-- ARTICLES -->
-  <section class="py-12">
+  <section class="pb-20">
     <div class="max-w-6xl mx-auto px-6">
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="blog-grid">
 
-        <!-- ARTICLE PLACEHOLDER — à remplacer par de vrais articles -->
-        <p id="blog-empty" class="text-gray-500 text-center col-span-full py-20 text-lg">
+        <p id="blog-empty" class="text-muted text-center col-span-full py-20 text-lg font-light">
           Les articles arrivent bientôt... Revenez vite !
         </p>
 
@@ -118,18 +135,21 @@
     </div>
   </section>
 
+  <hr class="craft-divider" />
+
   <!-- CTA NEWSLETTER -->
-  <section class="py-20">
+  <section class="py-24">
     <div class="max-w-3xl mx-auto px-6 reveal">
-      <div class="bg-card border border-gray-800 rounded-3xl p-10 text-center relative overflow-hidden">
-        <div class="absolute -top-20 -right-20 w-48 h-48 bg-primary rounded-full opacity-10 blur-3xl"></div>
-        <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-secondary rounded-full opacity-10 blur-3xl"></div>
+      <div class="bg-card border border-primary/8 rounded-2xl p-10 text-center relative overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-48 h-48 bg-primary rounded-full opacity-5 blur-3xl"></div>
+        <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-primary-dark rounded-full opacity-5 blur-3xl"></div>
         <div class="relative z-10">
-          <h2 class="text-2xl md:text-3xl font-black mb-4">Restez informé</h2>
-          <p class="text-gray-400 mb-8">Recevez les derniers articles et conseils directement dans votre boîte mail.</p>
+          <span class="text-primary font-semibold text-xs uppercase tracking-[0.2em]">Newsletter</span>
+          <h2 class="font-display text-3xl md:text-4xl font-bold mt-3 mb-4 tracking-tight italic">Restez informé</h2>
+          <p class="text-muted mb-8 font-light">Recevez les derniers articles et conseils directement dans votre boîte mail.</p>
           <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" id="newsletter-form">
             <input type="email" placeholder="votre@email.fr" required
-              class="flex-1 bg-dark border border-gray-700 rounded-full px-5 py-3 text-sm text-white outline-none focus:border-primary transition" />
+              class="flex-1 bg-dark border border-primary/10 rounded-lg px-5 py-3 text-sm text-cream outline-none focus:border-primary transition" />
             <button type="submit" class="btn-primary whitespace-nowrap">
               S'abonner
               <svg class="w-4 h-4 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,21 +162,26 @@
     </div>
   </section>
 
+  </main>
+
   <!-- FOOTER -->
-  <footer class="border-t border-gray-800 py-10">
+  <footer class="border-t border-primary/8 py-10">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-      <a href="index.html" class="text-2xl font-black"><span class="text-primary">TBO</span> Studio</a>
-      <p class="text-gray-600 text-sm">© 2024 TBO Studio. Tous droits réservés.</p>
-      <div class="flex gap-6 text-sm text-gray-500">
-        <a href="index.html#services" class="hover:text-white transition">Services</a>
-        <a href="index.html#portfolio" class="hover:text-white transition">Portfolio</a>
-        <a href="blog.html" class="hover:text-white transition">Blog</a>
-        <a href="index.html#contact" class="hover:text-white transition">Contact</a>
+      <p class="font-display text-2xl font-extrabold"><span class="text-primary">TBO</span> <span class="text-cream/50">Studio</span></p>
+      <p class="text-muted/50 text-sm">© 2026 TBO Studio. Tous droits réservés.</p>
+      <div class="flex gap-6 text-sm text-muted">
+        <a href="index.html#services" class="hover:text-cream transition duration-300">Services</a>
+        <a href="blog.html" class="hover:text-cream transition duration-300">Blog</a>
+        <a href="index.html#contact" class="hover:text-cream transition duration-300">Contact</a>
       </div>
     </div>
   </footer>
 
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/blog.js"></script>
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/blog.js" defer></script>
+
 </body>
 </html>
