@@ -390,17 +390,59 @@
       const data = await res.json();
       if (!data.places || !data.places.length) throw new Error("Aucune entreprise trouvée pour cette recherche.");
 
-      return data.places.map(p => ({
-        name: p.displayName?.text || 'Inconnu',
-        address: p.formattedAddress || '',
-        website: p.websiteUri || null,
-        phone: p.nationalPhoneNumber || null,
-        rating: p.rating || null,
-        ratingCount: p.userRatingCount || 0,
-        mapsUrl: p.googleMapsUri || null,
-        auditScore: null,
-        auditStatus: 'pending', // pending, loading, done, error, no-site
-      }));
+      return data.places.map(p => {
+        const raw = p.websiteUri || null;
+        const fake = isFakeSite(raw);
+        return {
+          name: p.displayName?.text || 'Inconnu',
+          address: p.formattedAddress || '',
+          website: fake ? null : raw,
+          fakeWebsite: fake ? raw : null,
+          fakeType: fake ? getFakeType(raw) : null,
+          phone: p.nationalPhoneNumber || null,
+          rating: p.rating || null,
+          ratingCount: p.userRatingCount || 0,
+          mapsUrl: p.googleMapsUri || null,
+          auditScore: null,
+          auditStatus: 'pending',
+        };
+      });
+    }
+
+    function isFakeSite(url) {
+      if (!url) return false;
+      const fakes = [
+        'facebook.com', 'fb.com', 'instagram.com', 'twitter.com', 'x.com',
+        'linkedin.com', 'tiktok.com', 'youtube.com', 'youtu.be',
+        'planity.com', 'doctolib.fr', 'treatwell.fr', 'kiute.com',
+        'ubereats.com', 'deliveroo.fr', 'justeat.fr',
+        'pagesjaunes.fr', 'yelp.fr', 'tripadvisor.fr', 'tripadvisor.com',
+        'lafourchette.com', 'thefork.com', 'booking.com', 'airbnb.fr',
+        'leboncoin.fr', 'etsy.com', 'amazon.fr'
+      ];
+      try {
+        const host = new URL(url).hostname.replace('www.', '').replace('m.', '');
+        return fakes.some(f => host === f || host.endsWith('.' + f));
+      } catch { return false; }
+    }
+
+    function getFakeType(url) {
+      if (!url) return null;
+      const host = new URL(url).hostname.toLowerCase();
+      if (host.includes('facebook') || host.includes('fb.com')) return 'Facebook';
+      if (host.includes('instagram')) return 'Instagram';
+      if (host.includes('linkedin')) return 'LinkedIn';
+      if (host.includes('tiktok')) return 'TikTok';
+      if (host.includes('youtube') || host.includes('youtu.be')) return 'YouTube';
+      if (host.includes('twitter') || host.includes('x.com')) return 'X/Twitter';
+      if (host.includes('planity')) return 'Planity';
+      if (host.includes('doctolib')) return 'Doctolib';
+      if (host.includes('treatwell') || host.includes('kiute')) return 'Treatwell';
+      if (host.includes('ubereats') || host.includes('deliveroo') || host.includes('justeat')) return 'Livraison';
+      if (host.includes('tripadvisor') || host.includes('lafourchette') || host.includes('thefork')) return 'Réservation';
+      if (host.includes('pagesjaunes')) return 'Pages Jaunes';
+      if (host.includes('booking') || host.includes('airbnb')) return 'Booking';
+      return 'Plateforme externe';
     }
 
     function renderSearchResults(results) {
@@ -418,7 +460,9 @@
               </div>
               <p class="text-xs text-muted mb-2">${r.address}</p>
               <div class="flex flex-wrap items-center gap-3 text-xs">
-                ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-light transition truncate max-w-[250px]">${r.website}</a>` : '<span class="text-red-400">Pas de site web</span>'}
+                ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-light transition truncate max-w-[250px]">${r.website}</a>` :
+                  r.fakeWebsite ? `<span class="text-amber-400">⚠️ Pas de vrai site — utilise ${r.fakeType}</span> <a href="${r.fakeWebsite}" target="_blank" rel="noopener noreferrer" class="text-muted hover:text-cream transition ml-1">voir ↗</a>` :
+                  '<span class="text-red-400">Pas de site web</span>'}
                 ${r.phone ? `<span class="text-muted">${r.phone}</span>` : ''}
                 ${r.mapsUrl ? `<a href="${r.mapsUrl}" target="_blank" rel="noopener noreferrer" class="text-muted hover:text-cream transition">Maps ↗</a>` : ''}
               </div>
@@ -433,9 +477,9 @@
                 <button onclick="auditSearchResult(${i})" class="text-sm font-semibold text-primary border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/10 transition whitespace-nowrap" ${r.auditStatus === 'loading' ? 'disabled' : ''}>
                   ${r.auditStatus === 'done' ? '📊 Voir détails' : '🔍 Auditer'}
                 </button>
-              ` : `<span class="text-xs text-muted italic">Prospect sans site = opportunité de création</span>
+              ` : `<span class="text-xs text-amber-400 italic">${r.fakeWebsite ? '💰 Utilise ' + r.fakeType + ' au lieu d\'un vrai site' : '💰 Aucune présence web'}</span>
                 <button onclick="saveNoSiteProspect(${i})" class="text-sm font-semibold text-amber-400 border border-amber-400/20 px-4 py-2 rounded-lg hover:bg-amber-400/10 transition whitespace-nowrap">
-                  💰 Sauvegarder
+                  Sauvegarder
                 </button>`}
             </div>
           </div>
@@ -506,17 +550,18 @@
 
     function saveNoSiteProspect(i) {
       const r = searchResults[i];
+      const platformInfo = r.fakeWebsite ? `Utilise ${r.fakeType} (${r.fakeWebsite})` : 'PAS DE SITE WEB';
       const prospect = {
         id: Date.now(),
         date: new Date().toISOString(),
-        url: r.mapsUrl || 'Pas de site',
+        url: r.fakeWebsite || r.mapsUrl || 'Pas de site',
         business: r.name,
         contact: '',
         scores: { performance: 0, seo: 0, accessibility: 0, bestPractices: 0 },
         overall: 0,
-        problems: ['Pas de site web — opportunité de création'],
+        problems: [r.fakeWebsite ? `Utilise ${r.fakeType} au lieu d'un vrai site web` : 'Pas de site web — opportunité de création'],
         status: 'new',
-        notes: `${r.phone || ''} — ${r.address} — PAS DE SITE WEB`,
+        notes: `${r.phone || ''} — ${r.address} — ${platformInfo}`,
       };
       prospects.unshift(prospect);
       persist();
