@@ -5,10 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="TBO Studio — Création de sites web, SEO et Google Ads pour artisans et commerçants dans le sud de la France. Plus de visibilité, plus de clients." />
   <meta name="keywords" content="création site web artisan, SEO local, Google Ads commerçant, référencement sud France, TBO Studio" />
+  <link rel="canonical" href="https://tbo-studio.fr/" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   <meta property="og:title" content="TBO Studio — Sites web & SEO pour artisans et commerçants du sud" />
   <meta property="og:description" content="Votre site web professionnel et votre référencement local pour attirer les clients de votre zone. Artisans, commerçants, indépendants." />
   <meta property="og:type" content="website" />
-  <title>TBO Studio — Création Web, SEO & SEA</title>
+  <meta property="og:url" content="https://tbo-studio.fr/" />
+  <meta property="og:image" content="https://tbo-studio.fr/assets/img/hero-bg.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TBO Studio — Sites web & SEO pour artisans et commerçants du sud" />
+  <meta name="twitter:description" content="Votre site web professionnel et votre référencement local pour attirer les clients de votre zone. Artisans, commerçants, indépendants." />
+  <meta name="twitter:image" content="https://tbo-studio.fr/assets/img/hero-bg.jpg" />
+  <title>TBO Studio — Création de sites web, SEO & SEA pour artisans dans le Sud</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="assets/css/style.css" />
   <script>
@@ -48,7 +56,6 @@
       <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
         <li><a href="#services" class="hover:text-cream transition duration-300">Services</a></li>
         <li><a href="#about" class="hover:text-cream transition duration-300">À propos</a></li>
-        <li><a href="#portfolio" class="hover:text-cream transition duration-300">Portfolio</a></li>
         <li><a href="#testimonials" class="hover:text-cream transition duration-300">Témoignages</a></li>
         <li><a href="blog.html" class="hover:text-cream transition duration-300">Blog</a></li>
         <li>
@@ -68,7 +75,6 @@
       <ul class="flex flex-col gap-4 text-sm font-medium text-muted">
         <li><a href="#services" class="hover:text-cream transition">Services</a></li>
         <li><a href="#about" class="hover:text-cream transition">À propos</a></li>
-        <li><a href="#portfolio" class="hover:text-cream transition">Portfolio</a></li>
         <li><a href="#testimonials" class="hover:text-cream transition">Témoignages</a></li>
         <li><a href="blog.html" class="hover:text-cream transition">Blog</a></li>
         <li><a href="#contact" class="text-primary font-semibold">Me contacter</a></li>
@@ -76,11 +82,12 @@
     </div>
   </header>
 
+  <main>
   <!-- HERO -->
   <section class="min-h-screen flex items-center relative overflow-hidden pt-20">
     <!-- Photo background -->
     <div class="absolute inset-0">
-      <img src="assets/img/hero-bg.jpg" alt="TBO Studio — création web pour artisans et commerçants" class="w-full h-full object-cover" />
+      <img src="assets/img/hero-bg.jpg" alt="TBO Studio — création web pour artisans et commerçants" class="w-full h-full object-cover" width="1920" height="1080" />
       <div class="absolute inset-0 bg-dark/75"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-dark via-dark/60 to-transparent"></div>
     </div>
@@ -103,7 +110,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </a>
-          <a href="#portfolio" class="btn-secondary">Voir mes réalisations</a>
         </div>
 
         <!-- Bénéfices émotionnels -->
@@ -368,59 +374,6 @@
 
   <hr class="craft-divider" />
 
-  <!-- PORTFOLIO -->
-  <section id="portfolio" class="py-28">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="text-center mb-16 reveal">
-        <span class="text-primary font-semibold text-xs uppercase tracking-[0.2em]">Réalisations</span>
-        <h2 class="font-display text-4xl md:text-5xl font-bold mt-3 mb-4 tracking-tight italic">Portfolio</h2>
-        <p class="text-muted max-w-xl mx-auto font-light">Des artisans et commerçants du sud qui ont boosté leur visibilité.</p>
-      </div>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        <div class="portfolio-card reveal">
-          <div class="portfolio-img bg-gradient-to-br from-primary/30 to-primary-dark/20">
-            <span class="text-4xl">🛍️</span>
-          </div>
-          <div class="p-5">
-            <span class="text-xs text-primary font-semibold uppercase tracking-wider">E-commerce</span>
-            <h3 class="font-bold text-lg mt-1 mb-2">Boutique en ligne</h3>
-            <p class="text-muted text-sm font-light">Site e-commerce avec gestion des stocks et paiement en ligne.</p>
-          </div>
-        </div>
-
-        <div class="portfolio-card reveal">
-          <div class="portfolio-img bg-gradient-to-br from-emerald-600/20 to-emerald-800/10">
-            <span class="text-4xl">🏥</span>
-          </div>
-          <div class="p-5">
-            <span class="text-xs text-primary font-semibold uppercase tracking-wider">Site vitrine + SEO</span>
-            <h3 class="font-bold text-lg mt-1 mb-2">Cabinet médical</h3>
-            <p class="text-muted text-sm font-light">Site vitrine optimisé SEO local — top 3 sur Google Maps.</p>
-          </div>
-        </div>
-
-        <div class="portfolio-card reveal">
-          <div class="portfolio-img bg-gradient-to-br from-amber-600/20 to-rose-600/10">
-            <span class="text-4xl">🍕</span>
-          </div>
-          <div class="p-5">
-            <span class="text-xs text-primary font-semibold uppercase tracking-wider">SEA</span>
-            <h3 class="font-bold text-lg mt-1 mb-2">Restaurant local</h3>
-            <p class="text-muted text-sm font-light">Campagne Google Ads — +40% de réservations en 2 mois.</p>
-          </div>
-        </div>
-
-      </div>
-      <div class="text-center mt-10 reveal">
-        <p class="text-muted text-sm font-light">Vous démarrez un projet ? Soyez le prochain dans ce portfolio.</p>
-        <a href="#contact" class="text-primary font-semibold hover:text-primary-light mt-2 inline-block transition">Parlons-en →</a>
-      </div>
-    </div>
-  </section>
-
-  <hr class="craft-divider" />
-
   <!-- TÉMOIGNAGES -->
   <section id="testimonials" class="py-28 section-alt">
     <div class="max-w-6xl mx-auto px-6">
@@ -512,21 +465,21 @@
           <form class="contact-form" id="contact-form">
             <div class="grid grid-cols-2 gap-4">
               <div class="form-group">
-                <label>Prénom</label>
-                <input type="text" placeholder="Jean" required />
+                <label for="prenom">Prénom</label>
+                <input id="prenom" type="text" placeholder="Jean" required />
               </div>
               <div class="form-group">
-                <label>Nom</label>
-                <input type="text" placeholder="Dupont" required />
+                <label for="nom">Nom</label>
+                <input id="nom" type="text" placeholder="Dupont" required />
               </div>
             </div>
             <div class="form-group">
-              <label>Email</label>
-              <input type="email" placeholder="jean@exemple.fr" required />
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="jean@exemple.fr" required />
             </div>
             <div class="form-group">
-              <label>Votre besoin</label>
-              <select required>
+              <label for="besoin">Votre besoin</label>
+              <select id="besoin" required>
                 <option value="" disabled selected>Choisir un service</option>
                 <option>Création de site web</option>
                 <option>Référencement SEO</option>
@@ -541,8 +494,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label>Message</label>
-              <textarea rows="4" placeholder="Décrivez votre projet..." required></textarea>
+              <label for="message">Message</label>
+              <textarea id="message" rows="4" placeholder="Décrivez votre projet..." required></textarea>
             </div>
             <button type="submit" class="btn-primary w-full justify-center">
               Envoyer le message
@@ -556,6 +509,8 @@
     </div>
   </section>
 
+  </main>
+
   <!-- FOOTER -->
   <footer class="border-t border-primary/8 py-10">
     <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -563,7 +518,6 @@
       <p class="text-muted/50 text-sm">© 2026 TBO Studio. Tous droits réservés.</p>
       <div class="flex gap-6 text-sm text-muted">
         <a href="#services" class="hover:text-cream transition duration-300">Services</a>
-        <a href="#portfolio" class="hover:text-cream transition duration-300">Portfolio</a>
         <a href="blog.html" class="hover:text-cream transition duration-300">Blog</a>
         <a href="#contact" class="hover:text-cream transition duration-300">Contact</a>
       </div>
@@ -571,8 +525,27 @@
   </footer>
 
   <!-- GSAP -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+
+  <!-- JSON-LD Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "TBO Studio",
+    "url": "https://tbo-studio.fr",
+    "email": "contact@tbostudio.fr",
+    "description": "Création de sites web, SEO et Google Ads pour artisans et commerçants dans le sud de la France.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "FR",
+      "addressRegion": "Sud de la France"
+    },
+    "areaServed": "Sud de la France",
+    "serviceType": ["Création de site web", "SEO", "Google Ads", "Automatisation", "Intégration IA"]
+  }
+  </script>
 </body>
 </html>
