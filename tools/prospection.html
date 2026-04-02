@@ -40,6 +40,8 @@
     .score-ring { animation: score-fill 1.2s ease-out forwards; }
     .tab-content { display: none; }
     .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    .mode-content { display: none; }
+    .mode-content.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .animate-pulse { animation: pulse 2s ease-in-out infinite; }
@@ -47,7 +49,7 @@
     ::-webkit-scrollbar-track { background: #161311; }
     ::-webkit-scrollbar-thumb { background: rgba(201,132,92,0.3); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(201,132,92,0.5); }
-    .tab-btn.active { background: #c9845c; border-color: #c9845c; color: #161311; }
+    .tab-btn.active, .mode-btn.active { background: #c9845c; border-color: #c9845c; color: #161311; }
   </style>
 </head>
 <body class="bg-dark text-cream font-sans min-h-screen">
@@ -58,145 +60,490 @@
       <a href="../index.html" class="font-display text-2xl font-extrabold tracking-tight">
         <span class="text-primary">TBO</span> <span class="text-cream/70">Studio</span>
       </a>
-      <span class="text-xs text-muted border border-primary/15 px-3 py-1 rounded-lg">Outil interne</span>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSettings()" class="text-muted hover:text-cream transition" title="Paramètres API">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+        <span class="text-xs text-muted border border-primary/15 px-3 py-1 rounded-lg">Outil interne</span>
+      </div>
     </nav>
   </header>
 
+  <!-- SETTINGS MODAL -->
+  <div id="settings-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-dark/80 backdrop-blur-sm">
+    <div class="bg-card border border-primary/15 rounded-2xl p-8 max-w-md w-full mx-4">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display text-xl font-bold italic">Paramètres</h3>
+        <button onclick="toggleSettings()" class="text-muted hover:text-cream transition">&times;</button>
+      </div>
+      <div class="mb-4">
+        <label for="api-key" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Clé API Google Places</label>
+        <input id="api-key" type="password" placeholder="AIzaSy..."
+          class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+        <p class="text-xs text-muted mt-2">Stockée uniquement dans votre navigateur (localStorage). Jamais envoyée ailleurs que chez Google.</p>
+      </div>
+      <button onclick="saveApiKey()" class="w-full bg-primary text-dark font-bold py-3 rounded-xl hover:bg-primary-light transition text-sm">
+        Enregistrer
+      </button>
+      <p id="settings-status" class="hidden text-center text-green-400 text-xs mt-3"></p>
+    </div>
+  </div>
+
   <main class="max-w-6xl mx-auto px-6 py-12">
 
-    <!-- INPUT SECTION -->
-    <section class="max-w-2xl mx-auto text-center mb-16">
+    <!-- TITLE -->
+    <div class="text-center mb-10">
       <h1 class="font-display text-4xl md:text-5xl font-bold tracking-tight italic mb-4">
-        Analysez un <span class="bg-gradient-to-r from-primary-light via-primary to-primary-dark bg-clip-text text-transparent not-italic">prospect</span>
+        Outil de <span class="bg-gradient-to-r from-primary-light via-primary to-primary-dark bg-clip-text text-transparent not-italic">prospection</span>
       </h1>
-      <p class="text-muted font-light mb-10">Entrez l'URL d'un site pour obtenir un score, un diagnostic complet et un email de prospection prêt à envoyer.</p>
+      <p class="text-muted font-light">Trouvez des prospects, analysez leur site, et générez un email personnalisé.</p>
+    </div>
 
-      <form id="analyze-form" class="bg-card/80 border border-primary/8 rounded-2xl p-8 text-left">
-        <div class="mb-4">
-          <label for="url" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">URL du site *</label>
-          <input id="url" type="url" placeholder="https://www.exemple.fr" required
-            class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+    <!-- MODE SWITCH -->
+    <div class="flex justify-center gap-3 mb-10">
+      <button class="mode-btn active text-sm font-semibold px-6 py-2.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-mode="search">
+        🔍 Rechercher des entreprises
+      </button>
+      <button class="mode-btn text-sm font-semibold px-6 py-2.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-mode="manual">
+        🔗 Analyser une URL
+      </button>
+      <button class="mode-btn text-sm font-semibold px-6 py-2.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-mode="history">
+        📋 Historique
+      </button>
+    </div>
+
+    <!-- MODE: SEARCH (Phase 2) -->
+    <div id="mode-search" class="mode-content active">
+      <div class="max-w-2xl mx-auto">
+        <form id="search-form" class="bg-card/80 border border-primary/8 rounded-2xl p-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label for="search-query" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Secteur d'activité *</label>
+              <input id="search-query" type="text" placeholder="boulangerie, plombier, restaurant..." required
+                class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+            </div>
+            <div>
+              <label for="search-location" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Ville / Zone *</label>
+              <input id="search-location" type="text" placeholder="Toulon, Marseille..." required
+                class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+            </div>
+          </div>
+          <button type="submit" id="search-btn" class="w-full bg-primary text-dark font-bold py-3.5 rounded-xl hover:bg-primary-light transition text-sm flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Trouver des prospects
+          </button>
+          <p id="search-loading" class="hidden text-center text-muted text-sm mt-4 animate-pulse">Recherche en cours...</p>
+          <p id="search-error" class="hidden text-center text-red-400 text-sm mt-4"></p>
+        </form>
+
+        <!-- Search results -->
+        <div id="search-results" class="hidden mt-8">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-display text-xl font-bold italic">Résultats</h3>
+            <div class="flex items-center gap-3">
+              <button id="audit-all-btn" onclick="auditAllResults()" class="text-sm font-semibold text-primary border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/10 transition">
+                Auditer tous les sites
+              </button>
+              <span id="search-count" class="text-xs text-muted"></span>
+            </div>
+          </div>
+          <div id="search-list" class="space-y-3"></div>
         </div>
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <label for="business" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Nom entreprise</label>
-            <input id="business" type="text" placeholder="Boulangerie Dupont"
+      </div>
+    </div>
+
+    <!-- MODE: MANUAL (Phase 1) -->
+    <div id="mode-manual" class="mode-content">
+      <div class="max-w-2xl mx-auto mb-16">
+        <form id="analyze-form" class="bg-card/80 border border-primary/8 rounded-2xl p-8">
+          <div class="mb-4">
+            <label for="url" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">URL du site *</label>
+            <input id="url" type="url" placeholder="https://www.exemple.fr" required
               class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
           </div>
-          <div>
-            <label for="contact" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Nom du contact</label>
-            <input id="contact" type="text" placeholder="M. Dupont"
-              class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <label for="business" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Nom entreprise</label>
+              <input id="business" type="text" placeholder="Boulangerie Dupont"
+                class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+            </div>
+            <div>
+              <label for="contact" class="text-xs font-semibold text-muted tracking-wide uppercase mb-1.5 block">Nom du contact</label>
+              <input id="contact" type="text" placeholder="M. Dupont"
+                class="w-full bg-dark/80 border border-primary/10 rounded-xl px-4 py-3 text-cream text-sm outline-none focus:border-primary transition" />
+            </div>
+          </div>
+          <button type="submit" id="analyze-btn" class="w-full bg-primary text-dark font-bold py-3.5 rounded-xl hover:bg-primary-light transition text-sm flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Analyser le site
+          </button>
+          <p id="loading-msg" class="hidden text-center text-muted text-sm mt-4 animate-pulse">Analyse en cours... cela peut prendre 15-30 secondes.</p>
+          <p id="error-msg" class="hidden text-center text-red-400 text-sm mt-4"></p>
+        </form>
+      </div>
+
+      <!-- RESULTS (hidden until analysis) -->
+      <section id="results" class="hidden">
+        <div class="grid md:grid-cols-5 gap-6 mb-10">
+          <div class="md:col-span-2 bg-card/80 border border-primary/8 rounded-2xl p-8 flex flex-col items-center justify-center">
+            <svg width="160" height="160" viewBox="0 0 120 120" class="mb-4">
+              <circle cx="60" cy="60" r="45" stroke="rgba(201,132,92,0.1)" stroke-width="10" fill="none"/>
+              <circle id="score-ring" cx="60" cy="60" r="45" stroke="#c9845c" stroke-width="10" fill="none"
+                stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)" class="score-ring"/>
+            </svg>
+            <p id="score-value" class="text-5xl font-display font-bold italic -mt-28 mb-20">--</p>
+            <p id="score-verdict" class="text-sm font-semibold px-4 py-1.5 rounded-lg"></p>
+          </div>
+          <div class="md:col-span-3 grid grid-cols-2 gap-4">
+            <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
+              <p class="text-xs text-muted uppercase tracking-wider mb-2">Performance</p>
+              <p id="perf-score" class="text-3xl font-display font-bold italic">--</p>
+              <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="perf-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            </div>
+            <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
+              <p class="text-xs text-muted uppercase tracking-wider mb-2">SEO</p>
+              <p id="seo-score" class="text-3xl font-display font-bold italic">--</p>
+              <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="seo-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            </div>
+            <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
+              <p class="text-xs text-muted uppercase tracking-wider mb-2">Accessibilité</p>
+              <p id="a11y-score" class="text-3xl font-display font-bold italic">--</p>
+              <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="a11y-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            </div>
+            <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
+              <p class="text-xs text-muted uppercase tracking-wider mb-2">Bonnes pratiques</p>
+              <p id="bp-score" class="text-3xl font-display font-bold italic">--</p>
+              <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="bp-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            </div>
           </div>
         </div>
-        <button type="submit" id="analyze-btn" class="w-full bg-primary text-dark font-bold py-3.5 rounded-xl hover:bg-primary-light transition text-sm flex items-center justify-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          Analyser le site
-        </button>
-        <p id="loading-msg" class="hidden text-center text-muted text-sm mt-4 animate-pulse">Analyse en cours... cela peut prendre 15-30 secondes.</p>
-        <p id="error-msg" class="hidden text-center text-red-400 text-sm mt-4"></p>
-      </form>
-    </section>
 
-    <!-- RESULTS (hidden until analysis) -->
-    <section id="results" class="hidden">
-
-      <!-- SCORE OVERVIEW -->
-      <div class="grid md:grid-cols-5 gap-6 mb-10">
-        <!-- Global score ring -->
-        <div class="md:col-span-2 bg-card/80 border border-primary/8 rounded-2xl p-8 flex flex-col items-center justify-center">
-          <svg width="160" height="160" viewBox="0 0 120 120" class="mb-4">
-            <circle cx="60" cy="60" r="45" stroke="rgba(201,132,92,0.1)" stroke-width="10" fill="none"/>
-            <circle id="score-ring" cx="60" cy="60" r="45" stroke="#c9845c" stroke-width="10" fill="none"
-              stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" transform="rotate(-90 60 60)" class="score-ring"/>
-          </svg>
-          <p id="score-value" class="text-5xl font-display font-bold italic -mt-28 mb-20">--</p>
-          <p id="score-verdict" class="text-sm font-semibold px-4 py-1.5 rounded-lg"></p>
+        <div class="flex flex-wrap gap-2 mb-8">
+          <button class="tab-btn active text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="pagespeed">Métriques</button>
+          <button class="tab-btn text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="checks">Checks techniques</button>
+          <button class="tab-btn text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="emails">Emails</button>
         </div>
-        <!-- Category scores -->
-        <div class="md:col-span-3 grid grid-cols-2 gap-4">
+
+        <div id="tab-pagespeed" class="tab-content active">
           <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-            <p class="text-xs text-muted uppercase tracking-wider mb-2">Performance</p>
-            <p id="perf-score" class="text-3xl font-display font-bold italic">--</p>
-            <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="perf-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            <h3 class="font-display text-xl font-bold italic mb-6">Core Web Vitals</h3>
+            <div id="metrics-list" class="space-y-4"></div>
           </div>
+        </div>
+
+        <div id="tab-checks" class="tab-content">
           <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-            <p class="text-xs text-muted uppercase tracking-wider mb-2">SEO</p>
-            <p id="seo-score" class="text-3xl font-display font-bold italic">--</p>
-            <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="seo-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
-          </div>
-          <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-            <p class="text-xs text-muted uppercase tracking-wider mb-2">Accessibilité</p>
-            <p id="a11y-score" class="text-3xl font-display font-bold italic">--</p>
-            <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="a11y-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
-          </div>
-          <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-            <p class="text-xs text-muted uppercase tracking-wider mb-2">Bonnes pratiques</p>
-            <p id="bp-score" class="text-3xl font-display font-bold italic">--</p>
-            <div class="w-full h-1.5 bg-dark/80 rounded-full mt-3"><div id="bp-bar" class="h-full rounded-full transition-all duration-1000" style="width:0%"></div></div>
+            <h3 class="font-display text-xl font-bold italic mb-6">Diagnostic technique</h3>
+            <div id="checks-list" class="space-y-3"></div>
           </div>
         </div>
-      </div>
 
-      <!-- TABS -->
-      <div class="flex flex-wrap gap-2 mb-8">
-        <button class="tab-btn active text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="pagespeed">Métriques</button>
-        <button class="tab-btn text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="checks">Checks techniques</button>
-        <button class="tab-btn text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="emails">Emails</button>
-        <button class="tab-btn text-sm font-semibold px-5 py-2 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-tab="history">Historique</button>
-      </div>
+        <div id="tab-emails" class="tab-content">
+          <div class="space-y-6" id="emails-list"></div>
+        </div>
+      </section>
+    </div>
 
-      <!-- TAB: Metrics -->
-      <div id="tab-pagespeed" class="tab-content active">
-        <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-          <h3 class="font-display text-xl font-bold italic mb-6">Core Web Vitals</h3>
-          <div id="metrics-list" class="space-y-4"></div>
+    <!-- MODE: HISTORY -->
+    <div id="mode-history" class="mode-content">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display text-2xl font-bold italic">Mes prospects</h3>
+        <div class="flex gap-3">
+          <button onclick="exportCSV()" class="text-sm font-semibold text-primary border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/10 transition">Exporter CSV</button>
+          <button onclick="clearHistory()" class="text-sm font-semibold text-red-400 border border-red-400/20 px-4 py-2 rounded-lg hover:bg-red-400/10 transition">Vider</button>
         </div>
       </div>
-
-      <!-- TAB: Technical checks -->
-      <div id="tab-checks" class="tab-content">
-        <div class="bg-card/80 border border-primary/8 rounded-2xl p-6">
-          <h3 class="font-display text-xl font-bold italic mb-6">Diagnostic technique</h3>
-          <div id="checks-list" class="space-y-3"></div>
-        </div>
+      <!-- Filter bar -->
+      <div class="flex flex-wrap gap-2 mb-6">
+        <button class="hist-filter active text-xs font-semibold px-4 py-1.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-filter="all">Tous</button>
+        <button class="hist-filter text-xs font-semibold px-4 py-1.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-filter="new">Nouveaux</button>
+        <button class="hist-filter text-xs font-semibold px-4 py-1.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-filter="contacted">Contactés</button>
+        <button class="hist-filter text-xs font-semibold px-4 py-1.5 rounded-lg border border-primary/12 text-muted transition cursor-pointer" data-filter="waiting">En attente</button>
       </div>
+      <div id="history-list" class="space-y-3"></div>
+      <p id="history-empty" class="hidden text-muted text-center py-12 font-light">Aucun prospect analysé pour le moment.</p>
+    </div>
 
-      <!-- TAB: Emails -->
-      <div id="tab-emails" class="tab-content">
-        <div class="space-y-6" id="emails-list"></div>
-      </div>
-
-      <!-- TAB: History -->
-      <div id="tab-history" class="tab-content">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="font-display text-xl font-bold italic">Mes prospects</h3>
-          <div class="flex gap-3">
-            <button onclick="exportCSV()" class="text-sm font-semibold text-primary border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/10 transition">Exporter CSV</button>
-            <button onclick="clearHistory()" class="text-sm font-semibold text-red-400 border border-red-400/20 px-4 py-2 rounded-lg hover:bg-red-400/10 transition">Vider</button>
-          </div>
-        </div>
-        <div id="history-list" class="space-y-3"></div>
-        <p id="history-empty" class="hidden text-muted text-center py-12 font-light">Aucun prospect analysé pour le moment.</p>
-      </div>
-
-    </section>
   </main>
 
   <script>
     // ===== STATE =====
     const STORAGE_KEY = 'tbo-prospects';
+    const API_KEY_STORAGE = 'tbo-google-api-key';
     let prospects = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     let currentResult = null;
+    let searchResults = [];
+    let historyFilter = 'all';
 
-    // ===== DOM =====
+    // ===== SETTINGS =====
+    function toggleSettings() {
+      const modal = document.getElementById('settings-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        document.getElementById('api-key').value = localStorage.getItem(API_KEY_STORAGE) || '';
+      }
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('api-key').value.trim();
+      if (key) {
+        localStorage.setItem(API_KEY_STORAGE, key);
+        const status = document.getElementById('settings-status');
+        status.textContent = '✓ Clé enregistrée !';
+        status.classList.remove('hidden');
+        setTimeout(() => { status.classList.add('hidden'); toggleSettings(); }, 1500);
+      }
+    }
+
+    function getApiKey() {
+      return localStorage.getItem(API_KEY_STORAGE) || '';
+    }
+
+    // ===== MODE SWITCH =====
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.mode-content').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('mode-' + btn.dataset.mode).classList.add('active');
+        if (btn.dataset.mode === 'history') renderHistory();
+      });
+    });
+
+    // ===== TABS =====
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== HISTORY FILTERS =====
+    document.querySelectorAll('.hist-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.hist-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        historyFilter = btn.dataset.filter;
+        renderHistory();
+      });
+    });
+
+    // ============================================================
+    // PHASE 2 — GOOGLE PLACES SEARCH
+    // ============================================================
+    const searchForm = document.getElementById('search-form');
+    const searchBtn = document.getElementById('search-btn');
+    const searchLoading = document.getElementById('search-loading');
+    const searchError = document.getElementById('search-error');
+
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = document.getElementById('search-query').value.trim();
+      const location = document.getElementById('search-location').value.trim();
+      const apiKey = getApiKey();
+
+      if (!apiKey) {
+        toggleSettings();
+        return;
+      }
+
+      searchBtn.disabled = true;
+      searchBtn.innerHTML = '<svg class="w-5 h-5 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="30 30"/></svg> Recherche...';
+      searchLoading.classList.remove('hidden');
+      searchError.classList.add('hidden');
+      document.getElementById('search-results').classList.add('hidden');
+
+      try {
+        searchResults = await searchPlaces(`${query} ${location}`, apiKey);
+        renderSearchResults(searchResults);
+        document.getElementById('search-results').classList.remove('hidden');
+      } catch (err) {
+        searchError.textContent = err.message;
+        searchError.classList.remove('hidden');
+      } finally {
+        searchBtn.disabled = false;
+        searchBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> Trouver des prospects';
+        searchLoading.classList.add('hidden');
+      }
+    });
+
+    async function searchPlaces(query, apiKey) {
+      const res = await fetch('https://places.googleapis.com/v1/places:searchText', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': apiKey,
+          'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.websiteUri,places.nationalPhoneNumber,places.rating,places.userRatingCount,places.googleMapsUri'
+        },
+        body: JSON.stringify({ textQuery: query, languageCode: 'fr', maxResultCount: 20 })
+      });
+
+      if (res.status === 403) throw new Error("Clé API invalide ou API Places non activée. Vérifiez dans Google Cloud Console.");
+      if (res.status === 429) throw new Error("Trop de requêtes — attendez quelques secondes.");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error?.message || "Erreur lors de la recherche. Vérifiez votre clé API.");
+      }
+
+      const data = await res.json();
+      if (!data.places || !data.places.length) throw new Error("Aucune entreprise trouvée pour cette recherche.");
+
+      return data.places.map(p => ({
+        name: p.displayName?.text || 'Inconnu',
+        address: p.formattedAddress || '',
+        website: p.websiteUri || null,
+        phone: p.nationalPhoneNumber || null,
+        rating: p.rating || null,
+        ratingCount: p.userRatingCount || 0,
+        mapsUrl: p.googleMapsUri || null,
+        auditScore: null,
+        auditStatus: 'pending', // pending, loading, done, error, no-site
+      }));
+    }
+
+    function renderSearchResults(results) {
+      document.getElementById('search-count').textContent = `${results.length} résultats`;
+      const withSite = results.filter(r => r.website).length;
+      const list = document.getElementById('search-list');
+
+      list.innerHTML = results.map((r, i) => `
+        <div class="bg-card/80 border border-primary/8 rounded-xl p-5" id="search-item-${i}">
+          <div class="flex flex-col md:flex-row md:items-center gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-1.5">
+                <h4 class="font-semibold text-sm">${r.name}</h4>
+                ${r.rating ? `<span class="text-xs text-amber-400">★ ${r.rating} <span class="text-muted">(${r.ratingCount})</span></span>` : ''}
+              </div>
+              <p class="text-xs text-muted mb-2">${r.address}</p>
+              <div class="flex flex-wrap items-center gap-3 text-xs">
+                ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-light transition truncate max-w-[250px]">${r.website}</a>` : '<span class="text-red-400">Pas de site web</span>'}
+                ${r.phone ? `<span class="text-muted">${r.phone}</span>` : ''}
+                ${r.mapsUrl ? `<a href="${r.mapsUrl}" target="_blank" rel="noopener noreferrer" class="text-muted hover:text-cream transition">Maps ↗</a>` : ''}
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              ${r.website ? `
+                <div id="audit-status-${i}" class="text-xs">
+                  ${r.auditStatus === 'done' ? `<span class="font-bold px-2.5 py-1 rounded-md ${r.auditScore < 50 ? 'bg-green-500/15 text-green-400' : r.auditScore < 70 ? 'bg-amber-500/15 text-amber-400' : 'bg-muted/15 text-muted'}">${r.auditScore}/100</span>` :
+                    r.auditStatus === 'loading' ? '<span class="text-muted animate-pulse">Audit...</span>' :
+                    r.auditStatus === 'error' ? '<span class="text-red-400">Erreur</span>' : ''}
+                </div>
+                <button onclick="auditSearchResult(${i})" class="text-sm font-semibold text-primary border border-primary/20 px-4 py-2 rounded-lg hover:bg-primary/10 transition whitespace-nowrap" ${r.auditStatus === 'loading' ? 'disabled' : ''}>
+                  ${r.auditStatus === 'done' ? '📊 Voir détails' : '🔍 Auditer'}
+                </button>
+              ` : `<span class="text-xs text-muted italic">Prospect sans site = opportunité de création</span>
+                <button onclick="saveNoSiteProspect(${i})" class="text-sm font-semibold text-amber-400 border border-amber-400/20 px-4 py-2 rounded-lg hover:bg-amber-400/10 transition whitespace-nowrap">
+                  💰 Sauvegarder
+                </button>`}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function auditSearchResult(i) {
+      const r = searchResults[i];
+      if (r.auditStatus === 'done') {
+        // Switch to manual mode and show results
+        document.getElementById('url').value = r.website;
+        document.getElementById('business').value = r.name;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.mode-content').forEach(t => t.classList.remove('active'));
+        document.querySelector('[data-mode="manual"]').classList.add('active');
+        document.getElementById('mode-manual').classList.add('active');
+        document.getElementById('analyze-form').dispatchEvent(new Event('submit'));
+        return;
+      }
+
+      r.auditStatus = 'loading';
+      renderSearchResults(searchResults);
+
+      try {
+        const data = await fetchPageSpeed(r.website);
+        const result = parseResults(data, r.website, r.name, '');
+        r.auditScore = result.overall;
+        r.auditStatus = 'done';
+        saveProspect(result);
+      } catch {
+        r.auditStatus = 'error';
+      }
+      renderSearchResults(searchResults);
+    }
+
+    async function auditAllResults() {
+      const btn = document.getElementById('audit-all-btn');
+      btn.disabled = true;
+      btn.textContent = 'Audit en cours...';
+
+      const withSite = searchResults.filter(r => r.website && r.auditStatus !== 'done');
+      for (let i = 0; i < searchResults.length; i++) {
+        const r = searchResults[i];
+        if (!r.website || r.auditStatus === 'done') continue;
+
+        r.auditStatus = 'loading';
+        renderSearchResults(searchResults);
+
+        try {
+          const data = await fetchPageSpeed(r.website);
+          const result = parseResults(data, r.website, r.name, '');
+          r.auditScore = result.overall;
+          r.auditStatus = 'done';
+          saveProspect(result);
+        } catch {
+          r.auditStatus = 'error';
+        }
+        renderSearchResults(searchResults);
+
+        // Pause entre chaque audit pour éviter le rate limit
+        if (i < searchResults.length - 1) await sleep(2000);
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Auditer tous les sites';
+    }
+
+    function saveNoSiteProspect(i) {
+      const r = searchResults[i];
+      const prospect = {
+        id: Date.now(),
+        date: new Date().toISOString(),
+        url: r.mapsUrl || 'Pas de site',
+        business: r.name,
+        contact: '',
+        scores: { performance: 0, seo: 0, accessibility: 0, bestPractices: 0 },
+        overall: 0,
+        problems: ['Pas de site web — opportunité de création'],
+        status: 'new',
+        notes: `${r.phone || ''} — ${r.address} — PAS DE SITE WEB`,
+      };
+      prospects.unshift(prospect);
+      persist();
+
+      // Visual feedback
+      const btn = event.target;
+      btn.textContent = '✓ Sauvegardé';
+      btn.classList.remove('text-amber-400', 'border-amber-400/20');
+      btn.classList.add('text-green-400', 'border-green-400/20');
+      setTimeout(() => {
+        btn.textContent = '💰 Sauvegarder';
+        btn.classList.add('text-amber-400', 'border-amber-400/20');
+        btn.classList.remove('text-green-400', 'border-green-400/20');
+      }, 2000);
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ============================================================
+    // PHASE 1 — MANUAL URL ANALYSIS
+    // ============================================================
     const form = document.getElementById('analyze-form');
     const analyzeBtn = document.getElementById('analyze-btn');
     const loadingMsg = document.getElementById('loading-msg');
     const errorMsg = document.getElementById('error-msg');
     const resultsSection = document.getElementById('results');
 
-    // ===== FORM SUBMIT =====
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       let url = document.getElementById('url').value.trim();
@@ -205,7 +552,6 @@
       const business = document.getElementById('business').value.trim();
       const contact = document.getElementById('contact').value.trim();
 
-      // UI states
       analyzeBtn.disabled = true;
       analyzeBtn.innerHTML = '<svg class="w-5 h-5 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2" stroke-dasharray="30 30"/></svg> Analyse en cours...';
       loadingMsg.classList.remove('hidden');
@@ -229,7 +575,7 @@
       }
     });
 
-    // ===== API =====
+    // ===== PAGESPEED API =====
     async function fetchPageSpeed(url) {
       const apiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&category=PERFORMANCE&category=ACCESSIBILITY&category=SEO&category=BEST_PRACTICES&strategy=mobile`;
       const res = await fetch(apiUrl);
@@ -240,7 +586,7 @@
       return data;
     }
 
-    // ===== PARSE =====
+    // ===== PARSE RESULTS =====
     function parseResults(data, url, business, contact) {
       const lh = data.lighthouseResult;
       const cat = lh.categories;
@@ -306,9 +652,8 @@
       try { return new URL(url).hostname.replace('www.', ''); } catch { return url; }
     }
 
-    // ===== RENDER =====
+    // ===== RENDER RESULTS =====
     function renderResults(r) {
-      // Score ring
       const offset = 283 - (283 * r.overall / 100);
       const ring = document.getElementById('score-ring');
       ring.style.stroke = scoreColor(r.overall);
@@ -323,13 +668,11 @@
       else if (r.overall < 85) { verdict.textContent = '😐 Prospect moyen'; verdict.className = 'text-sm font-semibold px-4 py-1.5 rounded-lg bg-muted/15 text-muted'; }
       else { verdict.textContent = '⚠️ Site déjà optimisé'; verdict.className = 'text-sm font-semibold px-4 py-1.5 rounded-lg bg-red-400/15 text-red-400'; }
 
-      // Category scores
       renderCategory('perf', r.scores.performance);
       renderCategory('seo', r.scores.seo);
       renderCategory('a11y', r.scores.accessibility);
       renderCategory('bp', r.scores.bestPractices);
 
-      // Metrics
       document.getElementById('metrics-list').innerHTML = r.metrics.map(m => `
         <div class="flex items-center justify-between py-3 border-b border-primary/5 last:border-0">
           <div class="flex items-center gap-3">
@@ -343,7 +686,6 @@
         </div>
       `).join('');
 
-      // Checks
       document.getElementById('checks-list').innerHTML = r.checks.map(c => `
         <div class="flex items-center justify-between py-3 border-b border-primary/5 last:border-0">
           <div class="flex items-center gap-3">
@@ -354,11 +696,7 @@
         </div>
       `).join('');
 
-      // Emails
       renderEmails(r);
-
-      // History
-      renderHistory();
     }
 
     function renderCategory(prefix, score) {
@@ -388,7 +726,7 @@
           subject: `Une question rapide sur ${biz}`,
           body: `${who},
 
-Je me suis permis de jeter un coup d'œil au site de ${biz} et j'ai repéré quelques points qui pourraient vous faire perdre des clients :
+Je me suis permis de jeter un coup d'oeil au site de ${biz} et j'ai repéré quelques points qui pourraient vous faire perdre des clients :
 
 ${bulletPoints}
 
@@ -403,7 +741,7 @@ TBO Studio
 contact@tbostudio.fr`
         },
         {
-          title: '⚡ L\'approche performance',
+          title: "⚡ L'approche performance",
           subject: `${biz} — votre site perd des visiteurs sur mobile`,
           body: `${who},
 
@@ -422,7 +760,7 @@ TBO Studio
 contact@tbostudio.fr`
         },
         {
-          title: '🔍 L\'approche SEO',
+          title: "🔍 L'approche SEO",
           subject: `${biz} n'apparaît pas assez sur Google — voici pourquoi`,
           body: `${who},
 
@@ -460,7 +798,6 @@ contact@tbostudio.fr`
         </div>
       `).join('');
 
-      // Store for copy
       window._emails = emails;
     }
 
@@ -510,33 +847,37 @@ contact@tbostudio.fr`
     function renderHistory() {
       const list = document.getElementById('history-list');
       const empty = document.getElementById('history-empty');
+      const filtered = historyFilter === 'all' ? prospects : prospects.filter(p => p.status === historyFilter);
 
-      if (!prospects.length) {
+      if (!filtered.length) {
         list.innerHTML = '';
         empty.classList.remove('hidden');
+        empty.textContent = historyFilter === 'all' ? 'Aucun prospect analysé pour le moment.' : `Aucun prospect "${historyFilter === 'new' ? 'nouveau' : historyFilter === 'contacted' ? 'contacté' : 'en attente'}".`;
         return;
       }
       empty.classList.add('hidden');
 
-      list.innerHTML = prospects.map((p, i) => `
+      list.innerHTML = filtered.map((p) => {
+        const realIdx = prospects.indexOf(p);
+        return `
         <div class="bg-card/80 border border-primary/8 rounded-xl p-4 flex flex-col md:flex-row md:items-center gap-4">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-3 mb-1">
-              <span class="text-xs font-bold px-2 py-0.5 rounded ${p.overall < 50 ? 'bg-green-500/15 text-green-400' : p.overall < 70 ? 'bg-amber-500/15 text-amber-400' : 'bg-muted/15 text-muted'}">${p.overall}</span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded ${p.overall === 0 ? 'bg-amber-500/15 text-amber-400' : p.overall < 50 ? 'bg-green-500/15 text-green-400' : p.overall < 70 ? 'bg-amber-500/15 text-amber-400' : 'bg-muted/15 text-muted'}">${p.overall === 0 ? '💰' : p.overall}</span>
               <span class="font-semibold text-sm truncate">${p.business}</span>
-              <span class="text-xs px-2 py-0.5 rounded-md cursor-pointer ${p.status === 'contacted' ? 'bg-green-500/15 text-green-400' : p.status === 'new' ? 'bg-primary/15 text-primary' : 'bg-muted/15 text-muted'}" onclick="toggleStatus(${i})">${p.status === 'contacted' ? '✓ Contacté' : p.status === 'new' ? 'Nouveau' : 'En attente'}</span>
+              <span class="text-xs px-2 py-0.5 rounded-md cursor-pointer ${p.status === 'contacted' ? 'bg-green-500/15 text-green-400' : p.status === 'new' ? 'bg-primary/15 text-primary' : 'bg-muted/15 text-muted'}" onclick="toggleStatus(${realIdx})">${p.status === 'contacted' ? '✓ Contacté' : p.status === 'new' ? 'Nouveau' : 'En attente'}</span>
             </div>
             <p class="text-xs text-muted truncate">${p.url} — ${new Date(p.date).toLocaleDateString('fr-FR')}</p>
           </div>
           <div class="flex items-center gap-2">
             <input type="text" placeholder="Notes..." value="${(p.notes || '').replace(/"/g, '&quot;')}"
-              onchange="updateNotes(${i}, this.value)"
-              class="text-xs bg-dark/80 border border-primary/10 rounded-lg px-3 py-1.5 text-cream outline-none focus:border-primary transition w-40" />
-            <button onclick="reAnalyze('${p.url.replace(/'/g, "\\'")}')" class="text-xs text-primary hover:text-primary-light transition" title="Re-analyser">🔄</button>
-            <button onclick="deleteProspect(${i})" class="text-xs text-red-400 hover:text-red-300 transition" title="Supprimer">🗑️</button>
+              onchange="updateNotes(${realIdx}, this.value)"
+              class="text-xs bg-dark/80 border border-primary/10 rounded-lg px-3 py-1.5 text-cream outline-none focus:border-primary transition w-48" />
+            ${p.overall > 0 ? `<button onclick="reAnalyze('${p.url.replace(/'/g, "\\'")}')" class="text-xs text-primary hover:text-primary-light transition" title="Re-analyser">🔄</button>` : ''}
+            <button onclick="deleteProspect(${realIdx})" class="text-xs text-red-400 hover:text-red-300 transition" title="Supprimer">🗑️</button>
           </div>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function toggleStatus(i) {
@@ -561,6 +902,10 @@ contact@tbostudio.fr`
 
     function reAnalyze(url) {
       document.getElementById('url').value = url;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.mode-content').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-mode="manual"]').classList.add('active');
+      document.getElementById('mode-manual').classList.add('active');
       form.dispatchEvent(new Event('submit'));
     }
 
@@ -590,18 +935,13 @@ contact@tbostudio.fr`
       a.click();
     }
 
-    // ===== TABS =====
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      });
-    });
-
     // ===== INIT =====
     renderHistory();
+
+    // Auto-fill API key if already saved
+    if (getApiKey()) {
+      console.log('Clé API Google chargée depuis localStorage.');
+    }
   </script>
 </body>
 </html>
