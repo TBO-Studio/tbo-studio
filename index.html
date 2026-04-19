@@ -738,22 +738,26 @@
     if (!e.target.closest('a')) window.location.href = 'services-production.html';
   });
 
-  // ── GSAP animations ──
+  // ── GSAP scroll reveals ──
   window.addEventListener('load', () => {
     if (typeof gsap === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero entrance
-    gsap.from('.panel-content', {
-      opacity: 0, y: 40, duration: 1.1, stagger: 0.2, ease: 'power3.out', delay: 0.3
-    });
+    // Hero entrance via fromTo (état final explicite pour éviter les stuck states)
+    gsap.fromTo('.panel-content',
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1.1, stagger: 0.2, ease: 'power3.out', delay: 0.2, clearProps: 'transform,opacity' }
+    );
 
     // Scroll reveals
     gsap.utils.toArray('.reveal').forEach(el => {
-      gsap.from(el, {
-        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-        opacity: 0, y: 36, duration: 0.9, ease: 'power3.out'
-      });
+      gsap.fromTo(el,
+        { opacity: 0, y: 36 },
+        {
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out'
+        }
+      );
     });
   });
 </script>
