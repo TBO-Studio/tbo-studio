@@ -201,16 +201,20 @@ body { -webkit-font-smoothing: antialiased; }
 
 .universe-num {
   font-family: 'Syne', sans-serif;
-  font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1;
-  -webkit-text-stroke: 1px currentColor;
-  color: transparent;
   font-variant-numeric: tabular-nums;
 }
-.marker-digital .universe-num { color: transparent; -webkit-text-stroke-color: rgba(123,163,250,0.55); }
-.marker-production .universe-num { color: transparent; -webkit-text-stroke-color: rgba(224,169,78,0.55); }
+.marker-digital .universe-num {
+  color: #7BA3FA;
+  text-shadow: 0 0 30px rgba(74,124,247,0.35);
+}
+.marker-production .universe-num {
+  color: #E0A94E;
+  text-shadow: 0 0 30px rgba(212,149,60,0.35);
+}
 
 .universe-bar {
   width: 44px;

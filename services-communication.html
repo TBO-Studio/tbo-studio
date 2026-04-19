@@ -24,6 +24,8 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>html:not(.tbo-authed) body > *:not(#tbo-gate){visibility:hidden!important}html:not(.tbo-authed) body{overflow:hidden!important;background:#060606}</style>
+  <script>if(sessionStorage.getItem('tbo_access_v1')==='granted')document.documentElement.classList.add('tbo-authed');</script>
   <script src="assets/js/gate.js"></script>
 </head>
 <body class="bg-base text-light font-sans overflow-x-hidden">

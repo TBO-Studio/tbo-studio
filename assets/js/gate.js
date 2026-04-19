@@ -13,15 +13,7 @@
     document.documentElement.classList.add('tbo-authed');
     return;
   }
-
-  // Cacher le contenu immédiatement (avant le rendu)
-  const hideStyle = document.createElement('style');
-  hideStyle.id = 'tbo-gate-hide';
-  hideStyle.textContent = `
-    html:not(.tbo-authed) body > *:not(#tbo-gate) { visibility: hidden !important; }
-    html:not(.tbo-authed) body { overflow: hidden !important; }
-  `;
-  document.documentElement.appendChild(hideStyle);
+  // Le masquage est déjà inline dans le <head> de chaque page
 
   function mountGate() {
     // Styles
